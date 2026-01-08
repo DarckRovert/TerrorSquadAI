@@ -1,0 +1,50 @@
+## Interface: 11200
+## Title: |cFF8B0000Terror Squad AI|r
+## Notes: Advanced AI module for squad management and combat decision-making. Created by DarckRovert for El Sequito del Terror.
+## Author: DarckRovert (elnazzareno)
+## Version: 2.1.0
+## SavedVariables: TerrorSquadAIDB
+## SavedVariablesPerCharacter: TerrorSquadAICharDB
+## OptionalDeps: BigWigs, pfQuest
+## X-Category: Combat
+## X-Website: https://github.com/darckrovert/terrorsquadai
+## X-Feedback: For El Sequito del Terror clan
+
+# Localization (must load first)
+Locales\esES.lua
+Locales\enUS.lua
+
+# Core Files
+Core.lua
+Commands.lua
+
+# Modules - Core Systems
+Modules\UITheme.lua
+Modules\AIEngine.lua
+Modules\ThreatAnalysis.lua
+Modules\PredictiveSystem.lua
+Modules\StrategicSuggestions.lua
+Modules\BigWigsIntegration.lua
+Modules\AlertSystem.lua
+Modules\CommunicationSync.lua
+Modules\SquadCoordination.lua
+
+# Modules - Enhanced Features (Phase 1-6)
+Modules\AutoMarker.lua
+Modules\CooldownTracker.lua
+Modules\GnomoFury.lua
+Modules\TacticalPings.lua
+Modules\StatusPanel.lua
+Modules\FocusFireCoordinator.lua
+Modules\InterruptCoordinator.lua
+Modules\PositionOptimizer.lua
+Modules\ResourceMonitor.lua
+Modules\ThreatPredictor.lua
+Modules\VoiceCommands.lua
+Modules\MacroGenerator.lua
+Modules\PerformanceTracker.lua
+Modules\SmartTargeting.lua
+
+# Modules - UI
+Modules\UI.lua
+Modules\Config.lua

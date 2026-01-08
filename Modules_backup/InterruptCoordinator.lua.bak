@@ -1,0 +1,5 @@
+-- InterruptCoordinator.lua - Coordinador de Interrupciones
+local addonName, TSA = ...
+
+TSA.InterruptCoordinator = {}
+local IC = TSA.InterruptCoordinator

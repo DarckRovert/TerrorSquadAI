@@ -1,0 +1,8 @@
+-- CooldownTracker.lua - Rastreador de Cooldowns del Escuadrón
+local addonName, TSA = ...
+
+TSA.CooldownTracker = {}
+local CT = TSA.CooldownTracker
+
+-- Cooldowns importantes por clase
+local IMPORTANT_COOLDOWNS = {

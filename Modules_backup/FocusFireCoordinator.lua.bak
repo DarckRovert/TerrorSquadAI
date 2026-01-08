@@ -1,0 +1,6 @@
+-- FocusFireCoordinator.lua - Coordinador de Fuego Concentrado
+local addonName, TSA = ...
+
+TSA.FocusFireCoordinator = {}
+local FFC = TSA.FocusFireCoordinator
+

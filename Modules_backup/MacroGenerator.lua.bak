@@ -1,0 +1,6 @@
+-- MacroGenerator.lua - Generador de Macros Inteligentes
+local addonName, TSA = ...
+
+TSA.MacroGenerator = {}
+local MG = TSA.MacroGenerator
+

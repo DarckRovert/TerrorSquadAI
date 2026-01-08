@@ -1,0 +1,9 @@
+-- GnomoFury.lua - Modo Furia Gnómica para PvP
+local addonName, TSA = ...
+
+TSA.GnomoFury = {}
+local GF = TSA.GnomoFury
+
+-- Estado del modo furia
+GF.furyMode = false
+GF.furyLevel = 0
