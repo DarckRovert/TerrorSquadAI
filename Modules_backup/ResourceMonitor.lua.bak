@@ -1,6 +1,0 @@
--- ResourceMonitor.lua - Monitor de Recursos del Escuadrón
-local addonName, TSA = ...
-
-TSA.ResourceMonitor = {}
-local RM = TSA.ResourceMonitor
-

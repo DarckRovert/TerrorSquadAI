@@ -1,5 +1,0 @@
--- SmartTargeting.lua - Sistema de Targeteo Inteligente
-local addonName, TSA = ...
-
-TSA.SmartTargeting = {}
-local ST = TSA.SmartTargeting

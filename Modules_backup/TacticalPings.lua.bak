@@ -1,6 +1,0 @@
--- TacticalPings.lua - Sistema de Pings Tácticos
-local addonName, TSA = ...
-
-TSA.TacticalPings = {}
-local TP = TSA.TacticalPings
-

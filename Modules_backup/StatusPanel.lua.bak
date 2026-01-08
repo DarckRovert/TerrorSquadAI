@@ -1,7 +1,0 @@
--- StatusPanel.lua - Panel de Estado del Escuadrón
-local addonName, TSA = ...
-
-TSA.StatusPanel = {}
-local SP = TSA.StatusPanel
-
--- Datos de miembros

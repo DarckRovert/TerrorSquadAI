@@ -1,6 +1,0 @@
--- PositionOptimizer.lua - Optimizador de Posicionamiento
-local addonName, TSA = ...
-
-TSA.PositionOptimizer = {}
-local PO = TSA.PositionOptimizer
-

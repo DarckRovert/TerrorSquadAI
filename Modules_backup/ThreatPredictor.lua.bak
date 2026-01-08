@@ -1,5 +1,0 @@
--- ThreatPredictor.lua - Predictor de Amenaza
-local addonName, TSA = ...
-
-TSA.ThreatPredictor = {}
-local TP = TSA.ThreatPredictor
