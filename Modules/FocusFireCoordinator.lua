@@ -147,7 +147,8 @@ function FFC:CalculatePriority(unit)
         end
         
         -- Bonus si está casteando
-        if UnitCastingInfo(unit) or UnitChannelInfo(unit) then
+        -- Vanilla WoW no tiene UnitCastingInfo/UnitChannelInfo
+        if false then -- UnitCastingInfo(unit) or UnitChannelInfo(unit) then
             priority = priority + 2
         end
     else
