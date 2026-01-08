@@ -93,7 +93,8 @@ end
 function PT:UpdateCPUUsage()
     -- CPU profiling no disponible en WoW 1.12
     -- Rastrear actividad por número de actualizaciones como proxy
-    self.metrics.cpuUsage = self.metrics.updateCount
+    -- Desactivado: no hay métrica real de CPU en WoW 1.12
+    self.metrics.cpuUsage = 0
 end
 
 function PT:RecordHistory()
@@ -142,11 +143,12 @@ function PT:CheckThresholds()
     end
     
     -- Advertir uso alto de CPU
-    if self.metrics.cpuUsage > self.config.cpuThreshold then
+    -- Desactivado: no hay métrica real de CPU en Vanilla
+    if false and self.metrics.cpuUsage > self.config.cpuThreshold then
         local lastWarn = self.lastCPUWarn or 0
         if GetTime() - lastWarn > 60 then
             self.lastCPUWarn = GetTime()
-            DEFAULT_CHAT_FRAME:AddMessage(string.format("|cFFFF8800[Performance]|r Uso alto de CPU: %.2f ms", self.metrics.cpuUsage), 1, 0.5, 0)
+            DEFAULT_CHAT_FRAME:AddMessage(string.format("|cFFFF8800[Performance]|r Uso alto de actualizaciones: %d", self.metrics.updateCount), 1, 0.5, 0)
         end
     end
 end

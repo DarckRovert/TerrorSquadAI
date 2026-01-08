@@ -1,6 +1,7 @@
 -- TerrorSquadAI Alert System Module
 -- Custom alert framework with personalized notifications
 -- Author: DarckRovert (elnazzareno)
+-- FIXED: Agregado sistema de cooldown para evitar spam de alertas
 
 local AlertSystem = {}
 TerrorSquadAI:RegisterModule("AlertSystem", AlertSystem)
@@ -9,6 +10,8 @@ TerrorSquadAI:RegisterModule("AlertSystem", AlertSystem)
 AlertSystem.activeAlerts = {}
 AlertSystem.alertQueue = {}
 AlertSystem.maxActiveAlerts = 5
+AlertSystem.alertCooldowns = {} -- Cooldown tracker para evitar spam
+AlertSystem.cooldownDuration = 3 -- segundos entre alertas del mismo mensaje
 
 -- Alert types
 AlertSystem.ALERT_CRITICAL = "critical"
@@ -24,6 +27,8 @@ function AlertSystem:Initialize()
     self.activeAlerts = {}
     self.alertQueue = {}
     self.alertFrames = {}
+    self.alertCooldowns = {}
+    self.cooldownDuration = 3
     
     -- Create alert frame pool
     self:CreateFramePool()
@@ -34,7 +39,7 @@ function AlertSystem:Initialize()
         AlertSystem:OnUpdate()
     end)
     
-    TerrorSquadAI:Debug("AlertSystem initialized")
+    TerrorSquadAI:Debug("AlertSystem initialized with anti-spam protection")
 end
 
 function AlertSystem:CreateFramePool()
@@ -124,6 +129,25 @@ end
 function AlertSystem:ShowAlert(alertData)
     if not TerrorSquadAI.DB.alertsEnabled then return end
     if not alertData or not alertData.message then return end
+    
+    -- Check cooldown para evitar spam del mismo mensaje
+    local messageKey = alertData.message
+    if self.alertCooldowns[messageKey] then
+        local timeSinceLastAlert = GetTime() - self.alertCooldowns[messageKey]
+        if timeSinceLastAlert < self.cooldownDuration then
+            return -- Mensaje todavía en cooldown
+        end
+    end
+    
+    -- Verificar si ya existe una alerta activa con el mismo mensaje
+    for _, activeAlert in ipairs(self.activeAlerts) do
+        if activeAlert.message == messageKey then
+            return -- Ya hay una alerta activa con este mensaje
+        end
+    end
+    
+    -- Registrar cooldown
+    self.alertCooldowns[messageKey] = GetTime()
     
     -- Create alert object
     local alert = {
