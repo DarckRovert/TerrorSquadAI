@@ -2,7 +2,7 @@
 ## Title: |cFF8B0000Terror Squad AI|r
 ## Notes: Advanced AI module for squad management and combat decision-making. Created by DarckRovert for El Sequito del Terror.
 ## Author: DarckRovert (elnazzareno)
-## Version: 2.1.0
+## Version: 2.2.0
 ## SavedVariables: TerrorSquadAIDB
 ## SavedVariablesPerCharacter: TerrorSquadAICharDB
 ## OptionalDeps: BigWigs, pfQuest
@@ -13,6 +13,10 @@
 # Localization (must load first)
 Locales\esES.lua
 Locales\enUS.lua
+
+# Spanish Client Compatibility System (v2.2.0)
+TerrorSquadAI_SpellLocalization.lua
+TerrorSquadAI_Patch.lua
 
 # Core Files
 Core.lua

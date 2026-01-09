@@ -2,7 +2,8 @@
 
 **Módulo de IA Avanzado para Gestión de Escuadrones y Toma de Decisiones en Combate**
 
-> **Versión 2.1.0** - Completamente reconstruido y optimizado para WoW Vanilla 1.12 (Turtle WoW)
+> **Versión 2.2.0** - Completamente reconstruido y optimizado para WoW Vanilla 1.12 (Turtle WoW)
+> 🇯🇵 **NUEVO:** Soporte completo para cliente en español
 
 ## 🎯 Descripción General
 
@@ -10,7 +11,7 @@ TerrorSquadAI es un addon sofisticado de World of Warcraft diseñado para Turtle
 
 Creado por **DarckRovert (elnazzareno)** para el clan **El Sequito del Terror**.
 
-## ⚠️ Nota Importante - Versión 2.1.0
+## ⚠️ Nota Importante - Versión 2.2.0
 
 Esta versión ha sido **completamente reconstruida** para garantizar compatibilidad total con WoW Vanilla 1.12:
 - ✅ Todos los módulos recreados desde cero
