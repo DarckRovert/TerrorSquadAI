@@ -1,0 +1,81 @@
+## Interface: 11200
+## Title: |cFF8B0000Terror Squad AI|r
+## Notes: Módulo avanzado de IA para la gestión de escuadrones y toma de decisiones en combate. Creado por DarckRovert para El Sequito del Terror.
+## Author: DarckRovert (elnazzareno)
+## Version: 4.1.1
+## SavedVariables: TerrorSquadAIDB
+## SavedVariablesPerCharacter: TerrorSquadAICharDB
+## OptionalDeps: BigWigs, pfQuest
+## X-Category: Combat
+## X-Website: https://github.com/darckrovert/terrorsquadai
+## X-Feedback: For El Sequito del Terror clan
+
+# Localization (must load first)
+Locales\esES.lua
+Locales\enUS.lua
+
+# Spanish Client Compatibility System
+TerrorSquadAI_SpellLocalization.lua
+TerrorSquadAI_Patch.lua
+
+# Core Files
+Core.lua
+Commands.lua
+
+# Modules - Core Systems
+Modules\UITheme.lua
+Modules\AIEngine.lua
+Modules\ThreatAnalysis.lua
+Modules\PredictiveSystem.lua
+Modules\StrategicSuggestions.lua
+Modules\BigWigsIntegration.lua
+Modules\AlertSystem.lua
+Modules\CommunicationSync.lua
+Modules\SquadCoordination.lua
+
+# Modules - Enhanced Features
+Modules\AutoMarker.lua
+Modules\CooldownTracker.lua
+Modules\GnomoFury.lua
+Modules\TacticalPings.lua
+Modules\StatusPanel.lua
+Modules\FocusFireCoordinator.lua
+Modules\InterruptCoordinator.lua
+Modules\PositionOptimizer.lua
+Modules\ResourceMonitor.lua
+Modules\ThreatPredictor.lua
+Modules\VoiceCommands.lua
+Modules\MacroGenerator.lua
+Modules\PerformanceTracker.lua
+Modules\SmartTargeting.lua
+
+# Modules - v3.0 New Features (Phase 1-4)
+Modules\DeathWatcher.lua
+Modules\CriticalHealthMonitor.lua
+Modules\PvPScorecard.lua
+Modules\CastingBarHook.lua
+Modules\BuffMonitor.lua
+Modules\WipePredictor.lua
+Modules\TerrorTactics.lua
+Modules\BossTimerLite.lua
+
+# Modules - v4.0 New Features (Phase 1)
+Modules\EnemyCooldowns.lua
+Modules\TacticalRadar.lua
+Modules\KillFeed.lua
+
+# Modules - v4.0 Turtle WoW (Phase 2)
+Modules\TurtleModules\Core.lua
+Modules\TurtleModules\EmeraldSanctum.lua
+Modules\TurtleModules\LowerKarazhan.lua
+
+# Modules - v4.0 Logistics (Phase 3)
+Modules\WarLogistics.lua
+
+# Modules - Integration
+Modules\TerrorMeterBridge.lua
+Modules\DoTimerBridge.lua
+
+# Modules - UI (load last)
+Modules\UI.lua
+Modules\Config.lua
