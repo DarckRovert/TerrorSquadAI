@@ -24,10 +24,10 @@ Un radar vectorial que muestra la posición relativa de amenazas y aliados.
 Rastrea las habilidades defensivas y ofensivas del enemigo (Burbujas, Cortes, Blocks).
 *   Funciona en clientes Inglés y Español.
 
-### 5. TerrorBoard (Pizarra Táctica God-Tier) [NUEVO]
-Una interfaz visual "God-Tier" para Raid Leaders que permite marcar posiciones estratégicas en una grilla de vidrio obsidiana.
+### 5. TerrorBoard v5.0 (Tactical Map) [NUEVO]
+Mapa táctico holográfico con posicionamiento en tiempo real y órdenes geográficas.
 *   **Acceso**: Click Derecho en el botón del minimapa o `/board`.
-*   **Funciones**: Grilla con Corner Brackets, Action Bar consolidada, Sincronización automática con la Raid.
+*   **Funciones**: Proyección transparente de zona, Blips en tiempo real (Jugador/Aliados), Marcadores de alta precisión (0.0001).
 
 ### 6. Interrupt Coordinator
 Organiza cortes de hechizos en el grupo para evitar superposiciones (dos personas cortando lo mismo).

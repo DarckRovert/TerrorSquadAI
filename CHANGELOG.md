@@ -4,6 +4,25 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 5.0.0 - Tactical Map Evolution (Marzo 2026)
+
+### 🎯 Cambio Principal
+**Transformación a Mapa Táctico Holográfico**. La Pizarra Táctica evoluciona a un mapa de zona transparente con posicionamiento en tiempo real.
+
+### ✨ Nuevas Funciones
+| Función | Descripción |
+|---------|-------------|
+| **Zone Map Overlay** | Proyección transparente del mapa actual (VC, MC, BWL, etc.) directamente en la pizarra. |
+| **Real-time Blips** | Seguimiento en vivo de tu posición y la de tus aliados sobre el terreno. |
+| **Coordinate Markers** | Los marcadores tácticos ahora se enlazan a coordenadas geográficas reales. |
+| **Safe Map Polling** | Sistema de consulta de mapas que no interfiere con el uso manual del WorldMap. |
+
+### 🛠️ Refactor Técnico
+- **Coordinate Engine** | Migración de 8x8 Grid a sistema Decimal de alta precisión (0.0001).
+- **Holographic Rendering** | Motor de 12 tiles para renderizar texturas de zona en frames personalizados.
+
+---
+
 ## 💎 Versión 4.2.0 - God-Tier Visual Remaster (Marzo 2026)
 
 ### 🎯 Cambio Principal

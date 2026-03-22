@@ -85,53 +85,41 @@ function TerrorBoard:CreateMainFrame()
     local closeBtn = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
     
-    -- Grid canvas
-    local canvas = CreateFrame("Frame", "TerrorBoard_Canvas", frame)
+    -- Grid canvas (Now a Tactical Map Surface)
+    local canvas = CreateFrame("Button", "TerrorBoard_Canvas", frame)
     canvas:SetWidth(totalSize)
     canvas:SetHeight(totalSize)
     canvas:SetPoint("TOPLEFT", frame, "TOPLEFT", 25, -65)
     
-    -- Grid background decoration
-    canvas.bg = canvas:CreateTexture(nil, "BACKGROUND")
-    canvas.bg:SetAllPoints()
-    canvas.bg:SetTexture(0, 0, 0, 0.5)
+    -- Initialize Tactical Map Engine
+    local TacticalMap = TerrorSquadAI.Modules.TacticalMap
+    TacticalMap:Initialize()
+    TacticalMap:SetParent(canvas)
     
-    -- Create grid cells with Corner Brackets
-    canvas.cells = {}
-    for row = 1, gridSize do
-        canvas.cells[row] = {}
-        for col = 1, gridSize do
-            local cell = CreateFrame("Button", "TerrorBoard_Cell_"..row.."_"..col, canvas)
-            cell:SetWidth(cellSize)
-            cell:SetHeight(cellSize)
-            cell:SetPoint("TOPLEFT", canvas, "TOPLEFT", (col-1)*cellSize, -((row-1)*cellSize))
-            
-            -- Tactical Corner Brackets
-            theme:CreateCornerBrackets(cell, 6, {0, 0.8, 1, 0.3})
-            
-            cell.highlight = cell:CreateTexture(nil, "HIGHLIGHT")
-            cell.highlight:SetAllPoints()
-            cell.highlight:SetTexture("Interface\\Buttons\\UI-EmptySlot-White")
-            cell.highlight:SetVertexColor(0, 1, 1, 0.1)
-            cell.highlight:SetBlendMode("ADD")
-            
-            cell.icon = cell:CreateTexture(nil, "OVERLAY")
-            cell.icon:SetWidth(cellSize - 10)
-            cell.icon:SetHeight(cellSize - 10)
-            cell.icon:SetPoint("CENTER", cell, "CENTER", 0, 0)
-            cell.icon:Hide()
-            
-            cell.row = row
-            cell.col = col
-            cell:SetScript("OnClick", function()
-                TerrorBoard:OnCellClick(this.row, this.col)
-            end)
-            
-            canvas.cells[row][col] = cell
-        end
-    end
+    -- Rejilla táctica sutil (Overlay)
+    canvas.grid = canvas:CreateTexture(nil, "OVERLAY")
+    canvas.grid:SetAllPoints()
+    canvas.grid:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
+    canvas.grid:SetVertexColor(0, 1, 1, 0.05)
+    
+    -- Surface Click Handling (Coordinate based)
+    canvas:SetScript("OnClick", function()
+        local x, y = GetCursorPosition()
+        local s = this:GetEffectiveScale()
+        local left, top = this:GetLeft(), this:GetTop()
+        local width, height = this:GetWidth(), this:GetHeight()
+        
+        -- Calcular x, y relativos (0-1)
+        local relX = (x/s - left) / width
+        local relY = (top - y/s) / height
+        
+        TerrorBoard:OnMapClick(relX, relY)
+    end)
     
     frame.canvas = canvas
+    
+    -- Table to track placed markers in 1.12
+    self.activeMarkers = {}
     
     -- Marker Selector Side-Panel
     local panel = CreateFrame("Frame", nil, frame)
@@ -264,33 +252,78 @@ function TerrorBoard:SelectEraser()
     end
 end
 
-function TerrorBoard:OnCellClick(row, col)
-    local cell = self.mainFrame.canvas.cells[row][col]
-    
+function TerrorBoard:OnMapClick(x, y)
     if self.selectedType == "erase" then
-        cell.icon:Hide()
-        cell.markerIndex = nil
-        self.placedMarkers[row.."_"..col] = nil
-    else
-        local marker = self.MARKERS[self.selectedMarker]
-        cell.icon:SetTexture(marker.icon)
-        cell.icon:Show()
-        cell.markerIndex = self.selectedMarker
-        self.placedMarkers[row.."_"..col] = self.selectedMarker
+        -- Encontrar el marcador más cercano para borrar
+        local closestKey = nil
+        local minDist = 0.05
+        for key, _ in pairs(self.placedMarkers) do
+            local kx, ky = self:ParseKey(key)
+            local dist = math.sqrt((kx-x)^2 + (ky-y)^2)
+            if dist < minDist then
+                minDist = dist
+                closestKey = key
+            end
+        end
         
-        -- God-Tier Feedback
-        TerrorSquadAI.Modules.UITheme:GlitchEffect(cell.icon, 0.2)
+        if closestKey then
+            self:RemoveMarker(closestKey)
+        end
+    else
+        self:PlaceMarker(x, y, self.selectedMarker)
     end
 end
 
+function TerrorBoard:ParseKey(key)
+    local _, _, kx, ky = string.find(key, "(.+)_(.+)")
+    return tonumber(kx), tonumber(ky)
+end
+
+function TerrorBoard:PlaceMarker(x, y, idx)
+    local key = string.format("%.4f_%.4f", x, y)
+    self.placedMarkers[key] = idx
+    
+    -- Crear o reutilizar frame de marcador
+    local markerFrame = self:GetMarkerFrame(key)
+    local markerData = self.MARKERS[idx]
+    markerFrame.icon:SetTexture(markerData.icon)
+    
+    local cW = self.mainFrame.canvas:GetWidth()
+    local cH = self.mainFrame.canvas:GetHeight()
+    markerFrame:SetPoint("CENTER", self.mainFrame.canvas, "TOPLEFT", x * cW, -(y * cH))
+    markerFrame:Show()
+    
+    -- God-Tier Feedback
+    TerrorSquadAI.Modules.UITheme:GlitchEffect(markerFrame.icon, 0.2)
+end
+
+function TerrorBoard:RemoveMarker(key)
+    if self.activeMarkers[key] then
+        self.activeMarkers[key]:Hide()
+    end
+    self.placedMarkers[key] = nil
+end
+
+function TerrorBoard:GetMarkerFrame(key)
+    if self.activeMarkers[key] then return self.activeMarkers[key] end
+    
+    -- Crear nuevo frame de marcador
+    local f = CreateFrame("Frame", nil, self.mainFrame.canvas)
+    f:SetWidth(24)
+    f:SetHeight(24)
+    f:SetFrameStrata("DIALOG")
+    f:SetFrameLevel(self.mainFrame.canvas:GetFrameLevel() + 5)
+    
+    f.icon = f:CreateTexture(nil, "OVERLAY")
+    f.icon:SetAllPoints()
+    
+    self.activeMarkers[key] = f
+    return f
+end
+
 function TerrorBoard:ClearAll()
-    local gridSize = self.config.gridSize
-    for row = 1, gridSize do
-        for col = 1, gridSize do
-            local cell = self.mainFrame.canvas.cells[row][col]
-            cell.icon:Hide()
-            cell.markerIndex = nil
-        end
+    for key, frame in pairs(self.activeMarkers) do
+        frame:Hide()
     end
     self.placedMarkers = {}
 end
@@ -337,18 +370,11 @@ function TerrorBoard:ReceiveBoard(data)
             local entryParts = split(entry, ":")
             local key, idx = entryParts[1], entryParts[2]
             
-            local keyParts = split(key, "_")
-            local row, col = keyParts[1], keyParts[2]
+            local kx, ky = self:ParseKey(key)
+            idx = tonumber(idx)
             
-            row, col, idx = tonumber(row), tonumber(col), tonumber(idx)
-            
-            if row and col and idx and self.mainFrame then
-                local cell = self.mainFrame.canvas.cells[row][col]
-                if cell and self.MARKERS[idx] then
-                    cell.icon:SetTexture(self.MARKERS[idx].icon)
-                    cell.icon:Show()
-                    self.placedMarkers[row.."_"..col] = idx
-                end
+            if kx and ky and idx then
+                self:PlaceMarker(kx, ky, idx)
             end
         end
     end
