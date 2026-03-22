@@ -17,6 +17,9 @@ TacticalMap.blips = {
     allies = {},
     enemies = {},
 }
+TacticalMap.labelPool = {}
+TacticalMap.activeLabels = {}
+TacticalMap.pings = {}
 
 function TacticalMap:Initialize()
     self:CreateMapFrame()

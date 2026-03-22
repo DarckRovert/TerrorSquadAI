@@ -272,18 +272,6 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
-## 📊 Changelog Summary
-
-| Versión | Fecha | Cambios Principales |
-|---------|-------|---------------------|
-| 5.1.2 | 2026-03-22 | Corregido error crítico `SetSize` (nil value) en Motor 1.12.1; Sincronización de estabilidad en `TerrorBoard.lua` |
-| 3.0.0 | Enero 2026 | 8 nuevos módulos, Terror Tactics, PvP Scorecard, Boss Timers |
-| 2.3.0 | Enero 2026 | Sistema de alertas sin spam, alertas visuales |
-| 2.0 | Enero 2026 | Terror Ecosystem, Integraciones, IA, 27 módulos |
-| 1.0 | 2025 | Release inicial |
-
----
-
 **TerrorSquadAI** - Evolucionando la coordinación táctica en WoW Vanilla
 
 Última actualización: Enero 2026
