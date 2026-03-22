@@ -49,7 +49,7 @@ function TerrorBoard:CreateMainFrame()
     
     -- Main frame (Glass Obsidian Design)
     local theme = TerrorSquadAI.Modules.UITheme
-    local L = TerrorSquadAI.Locales
+    local L = TerrorSquadAI.L
     local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 180, (totalSize * 0.75) + 120)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     frame:SetFrameStrata("DIALOG")
