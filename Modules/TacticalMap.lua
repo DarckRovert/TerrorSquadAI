@@ -307,5 +307,3 @@ function TacticalMap:SetParent(parent)
 end
 
 return TacticalMap
-
-return TacticalMap
