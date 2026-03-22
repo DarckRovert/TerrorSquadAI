@@ -49,7 +49,8 @@ function TerrorBoard:CreateMainFrame()
     
     -- Main frame (Glass Obsidian Design)
     local theme = TerrorSquadAI.Modules.UITheme
-    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 180, totalSize + 100)
+    local L = TerrorSquadAI.Locales
+    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 180, (totalSize * 0.75) + 120)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     frame:SetFrameStrata("DIALOG")
     frame:SetBackdropColor(0, 0, 0, 0.95)
@@ -73,7 +74,7 @@ function TerrorBoard:CreateMainFrame()
     
     frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.title:SetPoint("LEFT", frame.header, "LEFT", 10, 0)
-    frame.title:SetText("|cFF00FFFFTACTICAL COMMAND CENTER|r")
+    frame.title:SetText("|cFF00FFFF" .. (L["BOARD_TITLE"] or "TACTICAL COMMAND CENTER") .. "|r")
     frame.title:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
     
     -- Status Indicator (Blinking)
@@ -85,10 +86,10 @@ function TerrorBoard:CreateMainFrame()
     local closeBtn = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
     
-    -- Grid canvas (Now a Tactical Map Surface)
+    -- Grid canvas (Now a Tactical Map Surface with 4:3 Ratio)
     local canvas = CreateFrame("Button", "TerrorBoard_Canvas", frame)
     canvas:SetWidth(totalSize)
-    canvas:SetHeight(totalSize)
+    canvas:SetHeight(totalSize * 0.75)
     canvas:SetPoint("TOPLEFT", frame, "TOPLEFT", 25, -65)
     
     -- Initialize Tactical Map Engine
@@ -153,7 +154,7 @@ function TerrorBoard:CreateMainFrame()
     
     local markerLabel = panel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     markerLabel:SetPoint("TOP", panel, "TOP", 0, -10)
-    markerLabel:SetText("|cFF00CCFFMARKER ASSETS|r")
+    markerLabel:SetText("|cFF00CCFF" .. (L["BOARD_MARKER_ASSETS"] or "MARKER ASSETS") .. "|r")
     
     -- Marker buttons
     self.markerButtons = {}
@@ -204,18 +205,23 @@ function TerrorBoard:CreateMainFrame()
     actionBg:SetTexture(0, 0, 0, 0.4)
     theme:CreateCornerBrackets(actionBar, 8, {1, 1, 1, 0.2})
     
-    local eraseBtn = theme:CreateStyledButton("TerrorBoard_Erase", actionBar, 80, 24, "Borrar")
+    local eraseBtn = theme:CreateStyledButton("TerrorBoard_Erase", actionBar, 80, 24, L["BOARD_ERASE"] or "Borrar")
     eraseBtn:SetPoint("LEFT", actionBar, "LEFT", 10, 0)
     eraseBtn:SetScript("OnClick", function() TerrorBoard:SelectEraser() end)
     
-    local clearBtn = theme:CreateStyledButton("TerrorBoard_Clear", actionBar, 80, 24, "Limpiar")
+    local clearBtn = theme:CreateStyledButton("TerrorBoard_Clear", actionBar, 80, 24, L["BOARD_CLEAR"] or "Limpiar")
     clearBtn:SetPoint("LEFT", eraseBtn, "RIGHT", 10, 0)
     clearBtn:SetScript("OnClick", function() TerrorBoard:ClearAll() end)
     
-    local broadcastBtn = theme:CreateStyledButton("TerrorBoard_Broadcast", actionBar, 110, 24, "ENVIAR RAID")
+    local broadcastBtn = theme:CreateStyledButton("TerrorBoard_Broadcast", actionBar, 110, 24, L["BOARD_BROADCAST"] or "ENVIAR RAID")
     broadcastBtn:SetPoint("RIGHT", actionBar, "RIGHT", -10, 0)
     broadcastBtn:SetBackdropBorderColor(1, 0, 0, 0.8) -- Danger Red
     broadcastBtn:SetScript("OnClick", function() TerrorBoard:Broadcast() end)
+    
+    -- Tutorial Tip
+    local tip = actionBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    tip:SetPoint("LEFT", clearBtn, "RIGHT", 15, 0)
+    tip:SetText("|cFF888888" .. (L["BOARD_TUTORIAL_RIGHT_CLICK"] or "R-Click Erase") .. "|r")
     
     -- Global Scanline Animation
     frame.scanline = frame:CreateTexture(nil, "OVERLAY")

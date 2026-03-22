@@ -54,5 +54,13 @@ L["CONFIG_COORDINATION"] = "Coordination Priority"
 L["ERROR_NO_BIGWIGS"] = "BigWigs not detected"
 L["ERROR_SYNC_FAILED"] = "Failed to sync with squad"
 L["ERROR_MODULE_LOAD"] = "Failed to load module: %s"
+-- TerrorBoard
+L["BOARD_TITLE"] = "TACTICAL COMMAND CENTER"
+L["BOARD_ERASE"] = "Erase"
+L["BOARD_CLEAR"] = "Clear"
+L["BOARD_BROADCAST"] = "SEND TO RAID"
+L["BOARD_MARKER_ASSETS"] = "MARKER ASSETS"
+L["BOARD_TUTORIAL_RIGHT_CLICK"] = "Right-Click: Quick Erase"
+L["BOARD_OPACITY"] = "Opacity"
 
 TerrorSquadAI_Locale_enUS = L

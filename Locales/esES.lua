@@ -54,5 +54,13 @@ L["CONFIG_COORDINATION"] = "Prioridad de Coordinación"
 L["ERROR_NO_BIGWIGS"] = "BigWigs no detectado"
 L["ERROR_SYNC_FAILED"] = "Falló la sincronización con el escuadrón"
 L["ERROR_MODULE_LOAD"] = "Falló al cargar módulo: %s"
+-- TerrorBoard
+L["BOARD_TITLE"] = "CENTRO DE COMANDO TÁCTICO"
+L["BOARD_ERASE"] = "Borrar"
+L["BOARD_CLEAR"] = "Limpiar"
+L["BOARD_BROADCAST"] = "ENVIAR RAID"
+L["BOARD_MARKER_ASSETS"] = "ACTIVOS TÁCTICOS"
+L["BOARD_TUTORIAL_RIGHT_CLICK"] = "Click Derecho: Borrado Rápido"
+L["BOARD_OPACITY"] = "Opacidad"
 
 TerrorSquadAI_Locale_esES = L
