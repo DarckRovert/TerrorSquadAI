@@ -125,7 +125,8 @@ function TerrorBoard:CreateMainFrame()
     
     -- Opacity Controls (+ / -)
     local opacHeader = CreateFrame("Frame", nil, canvas)
-    opacHeader:SetSize(60, 20)
+    opacHeader:SetWidth(60)
+    opacHeader:SetHeight(20)
     opacHeader:SetPoint("BOTTOMRIGHT", canvas, "BOTTOMRIGHT", -5, 5)
     
     local plusBtn = theme:CreateStyledButton("TSAI_OpacPlus", opacHeader, 20, 20, "+")
