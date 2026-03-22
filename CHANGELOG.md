@@ -4,6 +4,14 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 5.1.8 - 2026-03-22
+### Fixed
+- **Certificación Final "No-Error"**: Auditoría completa de todos los módulos para asegurar estabilidad total en Turtle WoW (1.12.1).
+- **Sincronización de Versión**: Actualizada la versión interna en `Core.lua` y el archivo `.toc` a la v5.1.8.
+- **Optimización de Coordenadas**: Verificación final de los sistemas de mapeo y blips satelitales.
+
+---
+
 ## 🛰️ Versión 5.1.7 - 2026-03-22
 ### Fixed
 - **Alineación de Precisión God-Tier**: Rediseñado el marco principal a una resolución de **580x440** para eliminar desbordamientos del panel lateral.
