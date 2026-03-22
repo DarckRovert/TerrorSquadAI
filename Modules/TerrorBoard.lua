@@ -50,7 +50,7 @@ function TerrorBoard:CreateMainFrame()
     -- Main frame (Glass Obsidian Design)
     local theme = TerrorSquadAI.Modules.UITheme
     local L = TerrorSquadAI.L
-    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 110, (totalSize * 0.75) + 100)
+    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, 580, 440)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     frame:SetFrameStrata("DIALOG")
     frame:SetFrameLevel(10) -- Base Level
@@ -97,7 +97,8 @@ function TerrorBoard:CreateMainFrame()
     
     -- Border/Container for the Map (Visual Clipping)
     canvas.border = CreateFrame("Frame", nil, canvas)
-    canvas.border:SetAllPoints()
+    canvas.border:SetPoint("TOPLEFT", canvas, "TOPLEFT", 0, 0)
+    canvas.border:SetPoint("BOTTOMRIGHT", canvas, "BOTTOMRIGHT", 0, 0)
     canvas.border:SetBackdrop({
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
         edgeSize = 16,
@@ -137,20 +138,9 @@ function TerrorBoard:CreateMainFrame()
         end
     end)
     
-    -- Opacity Controls (+ / -)
-    local opacHeader = CreateFrame("Frame", nil, canvas)
-    opacHeader:SetWidth(60)
-    opacHeader:SetHeight(20)
-    opacHeader:SetPoint("BOTTOMRIGHT", canvas, "BOTTOMRIGHT", -5, 5)
-    opacHeader:SetFrameLevel(45) -- Above the map
+    -- Opacity Controls moved to actionBar in v5.1.7
     
-    local plusBtn = theme:CreateStyledButton("TSAI_OpacPlus", opacHeader, 20, 20, "+")
-    plusBtn:SetPoint("RIGHT", opacHeader, "RIGHT", 0, 0)
-    plusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(0.1) end)
-    
-    local minusBtn = theme:CreateStyledButton("TSAI_OpacMinus", opacHeader, 20, 20, "-")
-    minusBtn:SetPoint("RIGHT", plusBtn, "LEFT", 5, 0)
-    minusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(-0.1) end)
+    -- Opacity Buttons removed from here in v5.1.7
     
     frame.canvas = canvas
     
@@ -159,8 +149,8 @@ function TerrorBoard:CreateMainFrame()
     
     -- Marker Selector Side-Panel
     local panel = CreateFrame("Frame", nil, frame)
-    panel:SetWidth(110)
-    panel:SetHeight(320)
+    panel:SetWidth(120)
+    panel:SetHeight(300)
     panel:SetPoint("LEFT", canvas, "RIGHT", 15, 0)
     panel:SetFrameLevel(15)
     
@@ -224,8 +214,17 @@ function TerrorBoard:CreateMainFrame()
     actionBg:SetTexture(0, 0, 0, 0.7)
     theme:CreateCornerBrackets(actionBar, 8, {1, 1, 1, 0.2})
     
+    -- Opacity Controls (Moved into Action Bar in v5.1.7)
+    local minusBtn = theme:CreateStyledButton("TSAI_OpacMinus", actionBar, 24, 24, "-")
+    minusBtn:SetPoint("LEFT", actionBar, "LEFT", 8, 0)
+    minusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(-0.1) end)
+    
+    local plusBtn = theme:CreateStyledButton("TSAI_OpacPlus", actionBar, 24, 24, "+")
+    plusBtn:SetPoint("LEFT", minusBtn, "RIGHT", 4, 0)
+    plusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(0.1) end)
+    
     local eraseBtn = theme:CreateStyledButton("TerrorBoard_Erase", actionBar, 80, 24, L["BOARD_ERASE"] or "Borrar")
-    eraseBtn:SetPoint("LEFT", actionBar, "LEFT", 10, 0)
+    eraseBtn:SetPoint("LEFT", plusBtn, "RIGHT", 15, 0)
     eraseBtn:SetScript("OnClick", function() TerrorBoard:SelectEraser() end)
     
     local clearBtn = theme:CreateStyledButton("TerrorBoard_Clear", actionBar, 80, 24, L["BOARD_CLEAR"] or "Limpiar")
