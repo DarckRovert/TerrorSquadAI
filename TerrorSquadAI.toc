@@ -2,7 +2,7 @@
 ## Title: |cFF8B0000Terror Squad AI|r
 ## Notes: Módulo avanzado de IA para la gestión de escuadrones y toma de decisiones en combate. Creado por DarckRovert para El Sequito del Terror.
 ## Author: DarckRovert (elnazzareno)
-## Version: 4.1.2
+## Version: 5.0.0
 ## SavedVariables: TerrorSquadAIDB
 ## SavedVariablesPerCharacter: TerrorSquadAICharDB
 ## OptionalDeps: BigWigs, pfQuest
@@ -75,7 +75,8 @@ Modules\TurtleModules\LowerKarazhan.lua
 # Modules - v4.0 Logistics (Phase 3)
 Modules\WarLogistics.lua
 
-# Modules - v4.1 TerrorBoard
+# Modules - v5.0 Tactical Map
+Modules\TacticalMap.lua
 Modules\TerrorBoard.lua
 
 # Modules - Integration
