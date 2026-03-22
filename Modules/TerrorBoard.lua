@@ -50,10 +50,11 @@ function TerrorBoard:CreateMainFrame()
     -- Main frame (Glass Obsidian Design)
     local theme = TerrorSquadAI.Modules.UITheme
     local L = TerrorSquadAI.L
-    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 180, (totalSize * 0.75) + 120)
+    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, totalSize + 110, (totalSize * 0.75) + 100)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     frame:SetFrameStrata("DIALOG")
-    frame:SetBackdropColor(0, 0, 0, 0.95)
+    frame:SetFrameLevel(10) -- Base Level
+    frame:SetBackdropColor(0, 0, 0, 0.98)
     
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -85,17 +86,30 @@ function TerrorBoard:CreateMainFrame()
     -- Close button
     local closeBtn = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeBtn:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
+    closeBtn:SetFrameLevel(45) -- High level
     
     -- Grid canvas (Now a Tactical Map Surface with 4:3 Ratio)
     local canvas = CreateFrame("Button", "TerrorBoard_Canvas", frame)
-    canvas:SetWidth(totalSize)
-    canvas:SetHeight(totalSize * 0.75)
-    canvas:SetPoint("TOPLEFT", frame, "TOPLEFT", 25, -65)
+    canvas:SetWidth(400)
+    canvas:SetHeight(300)
+    canvas:SetPoint("TOPLEFT", frame, "TOPLEFT", 25, -55)
+    canvas:SetFrameLevel(11) -- Just above the main frame background
+    
+    -- Border/Container for the Map (Visual Clipping)
+    canvas.border = CreateFrame("Frame", nil, canvas)
+    canvas.border:SetAllPoints()
+    canvas.border:SetBackdrop({
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeSize = 16,
+        insets = {left = 4, right = 4, top = 4, bottom = 4}
+    })
+    canvas.border:SetBackdropBorderColor(0, 1, 1, 0.5)
+    canvas.border:SetFrameLevel(40) -- Above the map
     
     -- Initialize Tactical Map Engine
     local TacticalMap = TerrorSquadAI.Modules.TacticalMap
     TacticalMap:Initialize()
-    TacticalMap:SetParent(canvas)
+    TacticalMap:Setup(canvas)
     
     -- Rejilla táctica sutil (Overlay)
     canvas.grid = canvas:CreateTexture(nil, "OVERLAY")
@@ -128,6 +142,7 @@ function TerrorBoard:CreateMainFrame()
     opacHeader:SetWidth(60)
     opacHeader:SetHeight(20)
     opacHeader:SetPoint("BOTTOMRIGHT", canvas, "BOTTOMRIGHT", -5, 5)
+    opacHeader:SetFrameLevel(45) -- Above the map
     
     local plusBtn = theme:CreateStyledButton("TSAI_OpacPlus", opacHeader, 20, 20, "+")
     plusBtn:SetPoint("RIGHT", opacHeader, "RIGHT", 0, 0)
@@ -145,12 +160,13 @@ function TerrorBoard:CreateMainFrame()
     -- Marker Selector Side-Panel
     local panel = CreateFrame("Frame", nil, frame)
     panel:SetWidth(110)
-    panel:SetHeight(totalSize + 20)
-    panel:SetPoint("LEFT", canvas, "RIGHT", 20, 0)
+    panel:SetHeight(320)
+    panel:SetPoint("LEFT", canvas, "RIGHT", 15, 0)
+    panel:SetFrameLevel(15)
     
     local panelBg = panel:CreateTexture(nil, "BACKGROUND")
     panelBg:SetAllPoints()
-    panelBg:SetTexture(0, 0.1, 0.2, 0.3)
+    panelBg:SetTexture(0, 0, 0, 0.6)
     theme:CreateCornerBrackets(panel, 10, {0, 0.5, 1, 0.5})
     
     local markerLabel = panel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
@@ -164,6 +180,7 @@ function TerrorBoard:CreateMainFrame()
         local btn = CreateFrame("Button", "TerrorBoard_Marker_"..i, panel)
         btn:SetWidth(40)
         btn:SetHeight(40)
+        btn:SetFrameLevel(30)
         local brow = math.floor((i-1) / 2)
         local bcol = math.mod(i-1, 2)
         btn:SetPoint("TOPLEFT", panel, "TOPLEFT", bcol * 50 + 10, -35 - brow * 50)
@@ -197,13 +214,14 @@ function TerrorBoard:CreateMainFrame()
     
     -- Action Bar (Bottom Glass Panel)
     local actionBar = CreateFrame("Frame", nil, frame)
-    actionBar:SetHeight(40)
-    actionBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 15, 15)
-    actionBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -15, 15)
+    actionBar:SetHeight(45)
+    actionBar:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 15, 12)
+    actionBar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -15, 12)
+    actionBar:SetFrameLevel(40)
     
     local actionBg = actionBar:CreateTexture(nil, "BACKGROUND")
     actionBg:SetAllPoints()
-    actionBg:SetTexture(0, 0, 0, 0.4)
+    actionBg:SetTexture(0, 0, 0, 0.7)
     theme:CreateCornerBrackets(actionBar, 8, {1, 1, 1, 0.2})
     
     local eraseBtn = theme:CreateStyledButton("TerrorBoard_Erase", actionBar, 80, 24, L["BOARD_ERASE"] or "Borrar")
@@ -229,7 +247,7 @@ function TerrorBoard:CreateMainFrame()
     frame.scanline:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
     frame.scanline:SetBlendMode("ADD")
     frame.scanline:SetHeight(40)
-    frame.scanline:SetAlpha(0.05)
+    frame.scanline:SetAlpha(0.03)
     
     local elapsed = 0
     frame:SetScript("OnUpdate", function()

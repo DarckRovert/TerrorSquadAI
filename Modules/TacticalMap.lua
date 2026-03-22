@@ -22,16 +22,33 @@ TacticalMap.activeLabels = {}
 TacticalMap.pings = {}
 
 function TacticalMap:Initialize()
-    self:CreateMapFrame()
+    -- Initialize data structures, but don't create frames until Setup is called
+    self.currentMap = nil
+    self.labelPool = self.labelPool or {}
+    self.activeLabels = self.activeLabels or {}
+    self.pings = self.pings or {}
     self:CreatePollingFrame()
 end
 
-function TacticalMap:CreateMapFrame()
-    -- Este frame será el contenedor del mapa
-    local frame = CreateFrame("Frame", "TSAI_TacticalMap_Container", UIParent)
+function TacticalMap:Setup(container)
+    if not container then return end
+    
+    -- Si ya existe, reparentar
+    if self.mapFrame then
+        self.mapFrame:SetParent(container)
+        self.mapFrame:SetAllPoints(container)
+        self:LayoutTiles(self.mapFrame)
+        return
+    end
+
+    -- Crear el frame contenedor del mapa tactico
+    local frame = CreateFrame("Frame", "TSAI_TacticalMap_Internal", container)
     frame:SetWidth(400)
-    frame:SetHeight(400)
-    frame:Hide()
+    frame:SetHeight(300)
+    frame:SetPoint("CENTER", container, "CENTER", 0, 0)
+    
+    -- NIVEL BAJO: El mapa siempre debe estar al fondo del canvas
+    frame:SetFrameLevel(1)
     
     -- Los 12 tiles del WorldMapDetail (estándar de Blizzard 1.12)
     frame.tiles = {}
@@ -43,11 +60,16 @@ function TacticalMap:CreateMapFrame()
     
     self.mapFrame = frame
     self:LayoutTiles(frame)
+    self:UpdateMapTextures()
 end
 
 function TacticalMap:LayoutTiles(frame)
+    -- En 1.12.1, forzamos un ancho/alto base si no se detecta (400x300 es nuestro estandard)
     local width = frame:GetWidth()
     local height = frame:GetHeight()
+    if width == 0 then width = 400 end
+    if height == 0 then height = 300 end
+    
     local tW = width / 4
     local tH = height / 3
     
@@ -62,20 +84,23 @@ function TacticalMap:LayoutTiles(frame)
 end
 
 function TacticalMap:UpdateMapTextures()
-    -- NOTA: En 1.12, GetMapInfo() devuelve el nombre de la carpeta de texturas de la zona
+    -- NOTA: En 1.12, GetMapInfo() devuelve el nombre de la carpeta de texturas
     local mapName = GetMapInfo()
     if not mapName or mapName == "" then return end
     
     if mapName ~= self.currentMap then
         self.currentMap = mapName
-        for i = 1, 12 do
-            local texturePath = "Interface\\WorldMap\\" .. mapName .. "\\" .. mapName .. i
-            self.mapFrame.tiles[i]:SetTexture(texturePath)
+        if self.mapFrame and self.mapFrame.tiles then
+            for i = 1, 12 do
+                local texturePath = "Interface\\WorldMap\\" .. mapName .. "\\" .. mapName .. i
+                self.mapFrame.tiles[i]:SetTexture(texturePath)
+            end
         end
     end
 end
 
 function TacticalMap:CreatePollingFrame()
+    if self.pollingFrame then return end
     local f = CreateFrame("Frame")
     local elapsed = 0
     f:SetScript("OnUpdate", function()
@@ -97,19 +122,18 @@ function TacticalMap:Poll()
     local board = TerrorSquadAI.Modules.TerrorBoard
     if not board or not board.mainFrame or not board.mainFrame:IsShown() then return end
     
-    -- Actualizar texturas si es necesario
-    -- En 1.12, para obtener coordenadas válidas de otros, el mapa interno debe estar en la zona correcta
+    -- En 1.12, para obtener coordenadas válidas de otros, el mapa interno debe estar sincronizado
     if not WorldMapFrame:IsShown() then
         SetMapToCurrentZone()
     end
     
     self:UpdateMapTextures()
-    
-    -- Actualizar posiciones
     self:UpdateBlips()
 end
 
 function TacticalMap:UpdateBlips()
+    if not self.mapFrame then return end
+
     -- Jugador
     local x, y = GetPlayerMapPosition("player")
     if x > 0 and y > 0 then
@@ -119,10 +143,12 @@ function TacticalMap:UpdateBlips()
     end
     
     -- Ocultar todos los nombres activos para re-asignar
-    for unit, label in pairs(self.activeLabels) do
-        label:Hide()
-        table.insert(self.labelPool, label)
-        self.activeLabels[unit] = nil
+    if self.activeLabels then
+        for unit, label in pairs(self.activeLabels) do
+            label:Hide()
+            table.insert(self.labelPool, label)
+            self.activeLabels[unit] = nil
+        end
     end
     
     -- Aliados (Raid/Party)
@@ -141,28 +167,30 @@ function TacticalMap:UpdateBlips()
                 self:UpdateBlip(unit, ax, ay, "green")
                 self:ShowUnitLabel(unit, ax, ay)
             else
-                if self.blips.allies[unit] then self.blips.allies[unit]:Hide() end
+                if self.blips.allies and self.blips.allies[unit] then 
+                    self.blips.allies[unit]:Hide() 
+                end
             end
         end
     end
     
-    -- Limpiar pings expirados
     self:UpdatePings()
 end
 
 function TacticalMap:ShowUnitLabel(unit, x, y)
+    if not self.mapFrame then return end
     local label = table.remove(self.labelPool)
     if not label then
         label = self.mapFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        label:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
     end
     
     local name = UnitName(unit)
     if not name then return end
     
-    label:SetText("|cFFCCFFFF" .. string.sub(name, 1, 8) .. "|r") -- Truncar nombres largos
+    label:SetText("|cFFCCFFFF" .. string.sub(name, 1, 8) .. "|r")
     
-    local fW = self.mapFrame:GetWidth()
-    local fH = self.mapFrame:GetHeight()
+    local fW, fH = 400, 300
     label:SetPoint("BOTTOM", self.mapFrame, "TOPLEFT", x * fW, -(y * fH) - 12)
     label:Show()
     self.activeLabels[unit] = label
@@ -182,14 +210,10 @@ function TacticalMap:UpdateBlip(id, x, y, color)
         blip = self.blips.allies[id]
     end
     
-    -- Convertir x, y porcentual a posición de frame
-    local fW = self.mapFrame:GetWidth()
-    local fH = self.mapFrame:GetHeight()
-    
+    local fW, fH = 400, 300
     blip:ClearAllPoints()
     blip:SetPoint("CENTER", self.mapFrame, "TOPLEFT", x * fW, -(y * fH))
     
-    -- Color
     if color == "cyan" then
         blip.dot:SetVertexColor(0, 1, 1, 1)
     elseif color == "green" then
@@ -198,7 +222,6 @@ function TacticalMap:UpdateBlip(id, x, y, color)
     
     blip:Show()
     
-    -- Animación simple de pulso manual (1.12 compatible)
     local now = GetTime()
     local scale = 1 + math.sin(now * 5) * 0.2
     blip.glow:SetWidth(self.config.blipSize * 2 * scale)
@@ -207,8 +230,8 @@ function TacticalMap:UpdateBlip(id, x, y, color)
 end
 
 function TacticalMap:TriggerPing(x, y)
+    if not self.mapFrame then return end
     local ping = nil
-    -- Buscar ping inactivo
     for _, p in ipairs(self.pings) do
         if not p:IsShown() then ping = p break end
     end
@@ -217,22 +240,23 @@ function TacticalMap:TriggerPing(x, y)
         ping = CreateFrame("Frame", nil, self.mapFrame)
         ping:SetWidth(40)
         ping:SetHeight(40)
+        ping:SetFrameLevel(25) -- Encima de los blips
         ping.tex = ping:CreateTexture(nil, "OVERLAY")
         ping.tex:SetAllPoints()
         ping.tex:SetTexture("Interface\\Cooldown\\ping4")
         ping.tex:SetBlendMode("ADD")
-        ping.tex:SetVertexColor(1, 0, 0, 0.8)
+        ping.tex:SetVertexColor(1, 1, 0, 0.8) -- Amarillo para visibilidad
         table.insert(self.pings, ping)
     end
     
-    local fW = self.mapFrame:GetWidth()
-    local fH = self.mapFrame:GetHeight()
+    local fW, fH = 400, 300
     ping:SetPoint("CENTER", self.mapFrame, "TOPLEFT", x * fW, -(y * fH))
     ping.startTime = GetTime()
     ping:Show()
 end
 
 function TacticalMap:UpdatePings()
+    if not self.pings then return end
     local now = GetTime()
     for _, p in ipairs(self.pings) do
         if p:IsShown() then
@@ -251,8 +275,10 @@ end
 
 function TacticalMap:SetOpacity(delta)
     self.config.mapAlpha = math.max(0.1, math.min(1.0, self.config.mapAlpha + delta))
-    for i = 1, 12 do
-        self.mapFrame.tiles[i]:SetAlpha(self.config.mapAlpha)
+    if self.mapFrame and self.mapFrame.tiles then
+        for i = 1, 12 do
+            self.mapFrame.tiles[i]:SetAlpha(self.config.mapAlpha)
+        end
     end
 end
 
@@ -260,6 +286,7 @@ function TacticalMap:CreateBlipFrame(id)
     local b = CreateFrame("Frame", "TSAI_Blip_" .. id, self.mapFrame)
     b:SetWidth(self.config.blipSize)
     b:SetHeight(self.config.blipSize)
+    b:SetFrameLevel(20) -- Por encima del mapa
     
     b.dot = b:CreateTexture(nil, "OVERLAY")
     b.dot:SetAllPoints()
@@ -275,10 +302,10 @@ function TacticalMap:CreateBlipFrame(id)
 end
 
 function TacticalMap:SetParent(parent)
-    self.mapFrame:SetParent(parent)
-    self.mapFrame:SetAllPoints(parent)
-    self:LayoutTiles(self.mapFrame)
-    self.mapFrame:Show()
+    -- Deprecated in v5.1.5, now using Setup(container) for better control
+    self:Setup(parent)
 end
+
+return TacticalMap
 
 return TacticalMap

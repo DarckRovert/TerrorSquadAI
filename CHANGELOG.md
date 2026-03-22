@@ -4,6 +4,28 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 5.1.5 - 2026-03-22
+### Fixed
+- **Reconstrucción Visual God-Tier**: Corregido desbordamiento del mapa y conflictos de capas (Z-Order).
+- **Jerarquía de Capas**: El mapa ahora se mantiene estrictamente al fondo (`Level 1`), mientras que los botones y el panel táctico están en niveles superiores (`Level 40+`).
+- **Contenedor Holográfico**: Añadido un marco de recorte visual al `Canvas` para asegurar que el mapa no sangre fuera de la pizarra.
+- **Aspect Ratio 4:3**: Forzada la resolución estática de 400x300 para evitar mapas estirados o sobredimensionados.
+
+---
+
+## 🛰️ Versión 5.1.4 - 2026-03-22
+### Fixed
+- **Motor de Mapa**: Corregido error de inicialización de tablas (nil value) en `TacticalMap.lua`. Se han restaurado las estructuras de datos necesarias para el pooling de nombres y pings tácticos.
+
+---
+
+## 🛰️ Versión 5.1.3 - 2026-03-22
+### Fixed
+- **Holographic Rendering**: Corregido un error crítico donde el motor de renderizado de 12 tiles no se inicializaba correctamente en ciertas configuraciones de UI, causando que el mapa táctico no se mostrara.
+- **Coordinate Markers**: Ajustada la precisión de los marcadores para evitar pequeños desplazamientos en coordenadas extremas del mapa.
+
+---
+
 ## 🛰️ Versión 5.0.0 - Tactical Map Evolution (Marzo 2026)
 
 ### 🎯 Cambio Principal
