@@ -108,7 +108,7 @@ function AIEngine:OnCombatEnd()
 end
 
 function AIEngine:DetectScenario()
-    -- Check if in battleground
+    -- Check if in battleground (Vanilla 1.12 check)
     local inBattleground = false
     for i = 1, MAX_BATTLEFIELD_QUEUES do
         local status = GetBattlefieldStatus(i)
@@ -123,12 +123,24 @@ function AIEngine:DetectScenario()
         return
     end
     
-    -- Check if in instance
-    local inInstance, instanceType = IsInInstance()
+    -- Check if in instance (Vanilla 1.12 logic)
+    -- In 1.12 we check for raid/party members and zone type
+    local zoneText = GetRealZoneText()
+    local pVPType, isPVPZone, factionName = GetZonePVPInfo()
+    local inInstance = false
+    local instanceType = "none"
+    
+    if GetNumRaidMembers() > 0 or GetNumPartyMembers() > 0 then
+        -- If we are in a group and not in a known open world zone, assume instance
+        -- This is a heuristic for 1.12
+        if pVPType == "sanctuary" or (not isPVPZone and pVPType ~= "friendly" and pVPType ~= "hostile") then
+            inInstance = true
+            instanceType = (GetNumRaidMembers() > 0) and "raid" or "party"
+        end
+    end
+    
     if inInstance then
-        if instanceType == "pvp" then
-            self.currentScenario = self.SCENARIO_PVP_BATTLEGROUND
-        elseif instanceType == "party" or instanceType == "raid" then
+        if instanceType == "party" or instanceType == "raid" then
             -- Check if fighting boss (has raid icon or high level)
             if self:IsBossFight() then
                 self.currentScenario = self.SCENARIO_BOSS_FIGHT

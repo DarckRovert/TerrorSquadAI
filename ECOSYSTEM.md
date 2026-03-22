@@ -58,6 +58,7 @@ Si estás en una Raid donde varios jugadores usan este Ecosistema:
 | :--- | :--- |
 | `/tsai config` | Abre el panel central de configuración. |
 | `/tsai radar` | Activa/Desactiva el Radar Táctico 2.0. |
+| `/board` | Abre la Pizarra Táctica (TerrorBoard). |
 | `/tsai hud` | Activa/Desactiva los hologramas de pantalla. |
 | `/terrorlink` | Verifica la conexión con BigWigs. |
 | `/tmbridge status` | Verifica la conexión con TerrorMeter. |

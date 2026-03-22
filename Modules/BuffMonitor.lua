@@ -156,7 +156,16 @@ function BM:ScanUnitBuffs(unit)
         local shortName = buffInfo.shortName
         
         if not buffsSeen[shortName] then
-            local hasBuff = playerBuffs[buffInfo.name]
+            -- In 1.12 UnitBuff returns texture path, we match against the icon field
+            local hasBuff = false
+            if buffInfo.icon then
+                for buffPath, _ in pairs(playerBuffs) do
+                    if string.find(string.lower(buffPath), string.lower(buffInfo.icon)) then
+                        hasBuff = true
+                        break
+                    end
+                end
+            end
             
             if hasBuff then
                 self.buffStatus[shortName].present = self.buffStatus[shortName].present + 1

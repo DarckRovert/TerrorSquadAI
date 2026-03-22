@@ -24,15 +24,27 @@ Un radar vectorial que muestra la posición relativa de amenazas y aliados.
 Rastrea las habilidades defensivas y ofensivas del enemigo (Burbujas, Cortes, Blocks).
 *   Funciona en clientes Inglés y Español.
 
-### 5. Interrupt Coordinator
+### 5. TerrorBoard (Pizarra Táctica God-Tier) [NUEVO]
+Una interfaz visual "God-Tier" para Raid Leaders que permite marcar posiciones estratégicas en una grilla de vidrio obsidiana.
+*   **Acceso**: Click Derecho en el botón del minimapa o `/board`.
+*   **Funciones**: Grilla con Corner Brackets, Action Bar consolidada, Sincronización automática con la Raid.
+
+### 6. Interrupt Coordinator
 Organiza cortes de hechizos en el grupo para evitar superposiciones (dos personas cortando lo mismo).
 
 ## 🎮 Comandos Principales (`/tsai`)
 
-*   `/tsai config` - Abre el panel de configuración.
+*   `/tsai config` - Abre el panel de configuración (Click Izquierdo en minimapa).
+*   `/board` - Abre la Pizarra Táctica (Click Derecho en minimapa).
 *   `/tsai status` - Muestra el estado de todos los módulos.
 *   `/tsai reset` - Reinicia la IA si se comporta de forma extraña.
 *   `/tsai help` - Muestra la ayuda detallada.
+
+## 🖱️ Control de Minimapa (Lanzador Unificado)
+
+*   **Click Izquierdo**: Configuración del Addon.
+*   **Click Derecho**: Alternar Pizarra Táctica (TerrorBoard).
+*   **Shift + Click Derecho**: Activar/Desactivar el Sistema de IA de Combate.
 
 ## 🌐 Terror Ecosystem
 

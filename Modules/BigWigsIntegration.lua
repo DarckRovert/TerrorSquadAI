@@ -41,17 +41,17 @@ function BigWigsIntegration:SetupHooks()
     
     -- Hook into BigWigs message system
     if BigWigs.RegisterMessage then
-        -- BigWigs 2.0 style
+        -- BigWigs 2.0 style - Use arg table for 1.12.1 compatibility
         BigWigs:RegisterMessage("BigWigs_Message", function(...)
-            BigWigsIntegration:OnBigWigsMessage(arg1, arg2, arg3, arg4)
+            BigWigsIntegration:OnBigWigsMessage(arg[1], arg[2], arg[3], arg[4])
         end)
         
         BigWigs:RegisterMessage("BigWigs_StartBar", function(...)
-            BigWigsIntegration:OnBigWigsStartBar(arg1, arg2, arg3, arg4)
+            BigWigsIntegration:OnBigWigsStartBar(arg[1], arg[2], arg[3], arg[4])
         end)
         
         BigWigs:RegisterMessage("BigWigs_StopBar", function(...)
-            BigWigsIntegration:OnBigWigsStopBar(arg1, arg2)
+            BigWigsIntegration:OnBigWigsStopBar(arg[1], arg[2])
         end)
     end
     

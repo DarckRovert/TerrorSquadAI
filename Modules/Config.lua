@@ -507,17 +507,3 @@ function Config:Toggle()
     end
 end
 
--- Show config panel
-function Config:Show()
-    if self.configFrame then
-        self.configFrame:Show()
-    end
-end
-
--- Hide config panel
-function Config:Hide()
-    if self.configFrame then
-        self.configFrame:Hide()
-    end
-end
-

@@ -79,8 +79,16 @@ function WL:OnEvent(event)
     if event == "MERCHANT_SHOW" then
         self:CheckSupplies(false) -- Check silencioso/recordatorio
     elseif self.config.autoCheck then
-        local inInstance, instanceType = IsInInstance()
-        if inInstance and (instanceType == "party" or instanceType == "raid") then
+        -- Backport IsInInstance for 1.12.1
+        local pVPType, isPVPZone = GetZonePVPInfo()
+        local inInstance = false
+        if GetNumRaidMembers() > 0 or GetNumPartyMembers() > 0 then
+             if pVPType == "sanctuary" or (not isPVPZone and pVPType ~= "friendly" and pVPType ~= "hostile") then
+                 inInstance = true
+             end
+        end
+        
+        if inInstance then
             -- Darle un momento para cargar inventario si acabamos de loguear
             -- Usar un timer simple en Vanilla
             local timerFrame = CreateFrame("Frame")

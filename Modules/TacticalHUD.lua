@@ -18,6 +18,18 @@ function TacticalHUD:Initialize()
     TerrorSquadAI:Debug("TacticalHUD initialized")
 end
 
+function TacticalHUD:Toggle()
+    self.config.enabled = not self.config.enabled
+    local status = self.config.enabled and "|cFF00FF00Activado|r" or "|cFFFF0000Desactivado|r"
+    TerrorSquadAI:Print("Tactical HUD: " .. status)
+    
+    if not self.config.enabled then
+        if self.frame then self.frame:Hide() end
+    else
+        if self.frame then self.frame:Show() end
+    end
+end
+
 function TacticalHUD:CreateFrames()
     -- Main Parent Frame
     self.frame = CreateFrame("Frame", "TSAI_TacticalHUD", UIParent)
@@ -39,7 +51,7 @@ function TacticalHUD:CreateFrames()
     self.msgFrame = CreateFrame("Frame", nil, self.frame)
     self.msgFrame:SetWidth(512)
     self.msgFrame:SetHeight(128)
-    self.msgFrame:SetPoint("TOP", 0, -150)
+    self.msgFrame:SetPoint("TOP", self.frame, "TOP", 0, -150)
     
     self.msgBg = self.msgFrame:CreateTexture(nil, "BACKGROUND")
     self.msgBg:SetAllPoints()
@@ -50,12 +62,12 @@ function TacticalHUD:CreateFrames()
     self.msgIcon = self.msgFrame:CreateTexture(nil, "ARTWORK")
     self.msgIcon:SetWidth(48)
     self.msgIcon:SetHeight(48)
-    self.msgIcon:SetPoint("LEFT", 20, 0)
+    self.msgIcon:SetPoint("LEFT", self.msgFrame, "LEFT", 20, 0)
     
     self.msgText = self.msgFrame:CreateFontString(nil, "OVERLAY")
     self.msgText:SetFont("Fonts\\FRIZQT__.TTF", 24, "OUTLINE")
     self.msgText:SetPoint("LEFT", self.msgIcon, "RIGHT", 10, 0)
-    self.msgText:SetPoint("RIGHT", -10, 0)
+    self.msgText:SetPoint("RIGHT", self.msgFrame, "RIGHT", -10, 0)
     self.msgText:SetJustifyH("LEFT")
     self.msgText:SetText("SYSTEM ONLINE")
     
@@ -134,12 +146,23 @@ function TacticalHUD:OnUpdate()
         alpha = 1
     end
     
+    -- Holographic flicker effect (Micro-fluctuations in opacity)
+    if alpha == 1 then
+        alpha = 0.9 + (math.random() * 0.1)
+    end
+    
     self.msgFrame:SetAlpha(alpha)
     
     -- Pulse effect for Critical
     if self.activeAlert.type == "CRITICAL" then
-        local scale = 1.0 + (math.sin(elapsed * 10) * 0.05)
+        local scale = 1.0 + (math.sin(elapsed * 12) * 0.08)
         self.msgFrame:SetScale(scale)
+        -- Glitch color briefly
+        if math.random() > 0.95 then
+           self.msgBg:SetVertexColor(1, 1, 1, 0.8)
+        else
+           self.msgBg:SetVertexColor(1, 0, 0, 0.6)
+        end
     else
         self.msgFrame:SetScale(1.0)
     end

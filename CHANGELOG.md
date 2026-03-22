@@ -4,6 +4,33 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 💎 Versión 4.2.0 - God-Tier Visual Remaster (Marzo 2026)
+
+### 🎯 Cambio Principal
+**Remasterización Visual Completa y Unificación de Interfaz**. Evolución estética de la Pizarra Táctica a un estándar "God-Tier" y consolidación del sistema de lanzadores.
+
+### 🛠️ Mejoras Visuales
+| Cambio | Descripción |
+|--------|-------------|
+| **TerrorBoard Remaster** | Rediseño total con estética "Glass Obsidian" y efectos de escaneo CRT/Holográfico. |
+| **Grid de Brackets** | Sistema de esquinas tácticas iluminadas en lugar de bordes sólidos. |
+| **Action Bar Pro** | Consolidación de controles en una barra de cristal inferior para mayor limpieza. |
+| **Corner Brackets API** | Nueva utilidad en `UITheme` para crear esquinas tácticas en cualquier frame. |
+
+### 🖱️ Integración de Lanzador
+- **Unified Launcher**: El botón de minimapa ahora es universal.
+    - Click Izquierdo: Configuración.
+    - Click Derecho: Alternar Pizarra (TerrorBoard).
+    - Shift + Click Derecho: Alternar Sistema de IA.
+- **Redundancia Eliminada**: Se ha retirado el orbe "Tactical Core" para limpiar la UI.
+
+### 🐛 Estabilidad 1.12.1
+- **Audit de SetPoint** | Corregidos errores de posicionamiento en clientes antiguos.
+- **Click Registration** | Corregido registro de clicks derechos en el minimapa.
+- **Refactor GlitchEffect** | Sistema de efectos glitch ahora es estable para todos los objetos UI.
+
+---
+
 ## 🔧 Versión 4.1.1 - Stability Release (Enero 2026)
 
 ### 🎯 Cambio Principal

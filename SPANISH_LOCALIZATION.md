@@ -1,6 +1,6 @@
 # 🌐 Sistema de Localización Español
 
-## TerrorSquadAI v2.2.0 - Soporte para Cliente Español
+## TerrorSquadAI v4.2.0 - Soporte para Cliente Español
 
 ### 🎯 Descripción
 
@@ -65,6 +65,7 @@ Verifica el sistema de localización y traduce un hechizo específico.
 /tsailocale
 /tsailocale Escudo divino
 /tsailocale Evasión
+/board      -- Abre la pizarra táctica
 ```
 
 **Salida:**
@@ -156,7 +157,7 @@ TerrorSquadAI_SpellDB["Nova de Escarcha"] = "Frost Nova"
 
 ### 📊 Estado del Sistema
 
-**Versión:** 2.2.0
+**Versión:** 4.2.0
 **Hechizos Traducidos:** 100+
 **Clases Soportadas:** Todas (Warrior, Paladin, Hunter, Rogue, Priest, Shaman, Mage, Warlock, Druid)
 **Estado:** Completamente funcional

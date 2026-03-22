@@ -66,11 +66,13 @@ function SquadMind:ParseCombatLog(msg)
     
     for spellName, cdDuration in pairs(self.trackedCDs) do
         if string.find(msg, spellName) then
-            -- Find the caster
+            -- Find the caster (English and Spanish patterns)
             local _, _, caster = string.find(msg, "^(.+) casts "..spellName)
-            if not caster then
-                _, _, caster = string.find(msg, "^(.+) performs "..spellName)
-            end
+            if not caster then _, _, caster = string.find(msg, "^(.+) lanza "..spellName) end
+            if not caster then _, _, caster = string.find(msg, "^(.+) performs "..spellName) end
+            if not caster then _, _, caster = string.find(msg, "^(.+) realiza "..spellName) end
+            if not caster then _, _, caster = string.find(msg, "^(.+) comienza a lanzar "..spellName) end
+            if not caster then _, _, caster = string.find(msg, "^(.+) is casting "..spellName) end
             
             if caster then
                 self:RecordCooldown(caster, spellName, cdDuration)

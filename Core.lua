@@ -5,7 +5,7 @@
 
 -- Namespace
 TerrorSquadAI = {}
-TerrorSquadAI.Version = "4.1.1"
+TerrorSquadAI.Version = "4.1.2"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 
@@ -145,7 +145,7 @@ function TerrorSquadAI:Initialize()
         -- v4.0 Turtle
         "TurtleCore", "EmeraldSanctum", "LowerKarazhan",
         -- v4.0 Logistics
-        "WarLogistics", "TerrorNet",
+        "WarLogistics", "TerrorNet", "TerrorBoard",
         -- UI last
         "UI", "Config"
     }
@@ -351,6 +351,7 @@ function TerrorSquadAI:CreateMinimapButton()
     button:SetMovable(true)
     button:EnableMouse(true)
     button:RegisterForDrag("LeftButton")
+    button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     button:SetScript("OnDragStart", function()
         this:StartMoving()
     end)
@@ -367,8 +368,14 @@ function TerrorSquadAI:CreateMinimapButton()
                 TerrorSquadAI:Print("Abriendo interfaz...")
             end
         elseif arg1 == "RightButton" then
-            TerrorSquadAI.DB.aiEnabled = not TerrorSquadAI.DB.aiEnabled
-            TerrorSquadAI:Print("Sistema IA: " .. (TerrorSquadAI.DB.aiEnabled and "Activado" or "Desactivado"))
+            if IsShiftKeyDown() then
+                TerrorSquadAI.DB.aiEnabled = not TerrorSquadAI.DB.aiEnabled
+                TerrorSquadAI:Print("Sistema IA: " .. (TerrorSquadAI.DB.aiEnabled and "|CFF00FF00ACTIVADO|r" or "|CFFFF0000DESACTIVADO|r"))
+            else
+                if TerrorSquadAI.Modules.TerrorBoard then
+                    TerrorSquadAI.Modules.TerrorBoard:Toggle()
+                end
+            end
         end
     end)
     
@@ -376,11 +383,12 @@ function TerrorSquadAI:CreateMinimapButton()
     button:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_LEFT")
         GameTooltip:SetText("Terror Squad AI", 1, 1, 1)
-        GameTooltip:AddLine("Click izquierdo: Abrir interfaz", 0.8, 0.8, 0.8)
-        GameTooltip:AddLine("Click derecho: Activar/Desactivar IA", 0.8, 0.8, 0.8)
+        GameTooltip:AddLine("Click Izquierdo: Configuración", 0.8, 0.8, 0.8)
+        GameTooltip:AddLine("Click Derecho: Pizarra Táctica", 0, 1, 1)
+        GameTooltip:AddLine("Shift + Click Der: Activar/Desactivar IA", 0.7, 0.7, 0.7)
         GameTooltip:AddLine("Arrastrar: Mover botón", 0.8, 0.8, 0.8)
         GameTooltip:AddLine(" ", 1, 1, 1)
-        GameTooltip:AddLine("Estado: " .. (TerrorSquadAI.DB.aiEnabled and "|cFF00FF00ACTIVADO|r" or "|cFFFF0000DESACTIVADO|r"), 1, 1, 1)
+        GameTooltip:AddLine("Estado IA: " .. (TerrorSquadAI.DB.aiEnabled and "|cFF00FF00ACTIVADO|r" or "|cFFFF0000DESACTIVADO|r"), 1, 1, 1)
         GameTooltip:Show()
     end)
     

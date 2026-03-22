@@ -41,6 +41,19 @@ function TR:Initialize()
     TerrorSquadAI:Debug("TacticalRadar v2.0 (Visual Commander) initialized")
 end
 
+function TR:Toggle()
+    self.config.enabled = not self.config.enabled
+    local status = self.config.enabled and "|cFF00FF00Activado|r" or "|cFFFF0000Desactivado|r"
+    TerrorSquadAI:Print("Radar T\195\161ctico: " .. status)
+    
+    if not self.config.enabled then
+        for _, f in pairs(self.pool) do f:Hide() end
+        if self.hudFrame then self.hudFrame:Hide() end
+    else
+        if self.hudFrame then self.hudFrame:Show() end
+    end
+end
+
 function TR:RegisterExternalTarget(name, x, y, type)
     self.externalTargets[name] = {
         x = x,
@@ -51,7 +64,6 @@ function TR:RegisterExternalTarget(name, x, y, type)
 end
 
 function TR:CreateHUDFrame()
-
     -- Main transparent frame centered on screen
     self.hudFrame = CreateFrame("Frame", "TSAI_RadarHUD", UIParent)
     self.hudFrame:SetWidth(self.config.radius * 2)
@@ -59,11 +71,15 @@ function TR:CreateHUDFrame()
     self.hudFrame:SetPoint("CENTER", 0, 0)
     self.hudFrame:SetFrameStrata("BACKGROUND")
     
-    -- Optional: faint circle guide
-    -- self.bg = self.hudFrame:CreateTexture(nil, "BACKGROUND")
-    -- self.bg:SetAllPoints()
-    -- self.bg:SetTexture("Interface\\AddOns\\TerrorSquadAI\\Textures\\RadarCircle") -- Custom texture if we had one
-    -- self.bg:SetAlpha(0.1)
+    -- Radar Scanline (Rotating decorative line)
+    self.scanLine = self.hudFrame:CreateTexture(nil, "OVERLAY")
+    self.scanLine:SetWidth(self.config.radius)
+    self.scanLine:SetHeight(2)
+    self.scanLine:SetPoint("CENTER", self.hudFrame, "CENTER")
+    self.scanLine:SetTexture(0, 1, 0, 0.5) -- Green scanline
+    if self.scanLine.SetGradientAlpha then
+        self.scanLine:SetGradientAlpha("HORIZONTAL", 0, 1, 0, 0, 0, 1, 0, 0.8)
+    end
 end
 
 function TR:RegisterEvents()
@@ -251,21 +267,28 @@ function TR:OnUpdate()
                 local ind = self:GetIndicator(poolIndex)
                 ind:SetPoint("CENTER", self.hudFrame, "CENTER", hudY, hudX) -- Swap X/Y feels correct for WoW map rotation quirks often
                 
-                -- Setup Icon
-                ind.tex:SetTexture(TR.icons[t.type])
+                -- Setup Icon (Premium class icon support)
+                if t.unit and UnitIsPlayer(t.unit) then
+                    local _, class = UnitClass(t.unit)
+                    ind.tex:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
+                    local coords = CLASS_BUTTONS[class] -- Standard global in 1.12 for class coords
+                    if coords then
+                        ind.tex:SetTexCoord(coords[1], coords[2], coords[3], coords[4])
+                    end
+                else
+                    ind.tex:SetTexture(TR.icons[t.type])
+                    ind.tex:SetTexCoord(0, 1, 0, 1)
+                end
+                
                 local c = TR.colors[t.type]
                 ind.tex:SetVertexColor(c[1], c[2], c[3])
                 
-                -- Rotate Arrow to point away from center
-                -- Only works if texture allows manual rotation via TexCoord (standard arrow does)
-                if t.type == "TARGET" or t.type == "FOCUS" then
-                   local angle = math.atan2(hudX, hudY) 
-                   -- Rotate texture. angle is radians.
-                   -- Simple rotation logic:
-                   local cell = 0 -- Index for animated tex? No.
-                   -- Just set vertex color and position for now.
-                   -- Proper texture rotation requires complex TexCoord math.
-                   -- For v1.0, a dot/arrow pointing up is acceptable if it moves around the circle.
+                -- Rotate Scanline
+                if self.scanLine then
+                    local angle = math.mod(GetTime() * 100, 360)
+                    -- In 1.12 rotating a texture requires specific hacks or using a model frame.
+                    -- Simple solution: pulsate the scanline if rotation is too complex for simple Texture.
+                    self.scanLine:SetAlpha(0.2 + (math.sin(GetTime() * 5) * 0.2))
                 end
                 
                 ind:Show()

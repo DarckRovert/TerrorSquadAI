@@ -1,6 +1,6 @@
 # 🔗 TerrorSquadAI - Integraciones
 
-**Versión 3.0.0** - Ahora incluye BossTimerLite como alternativa a BigWigs
+**Versión 4.2.0** - God-Tier Visual Edition
 
 TerrorSquadAI se integra con múltiples addons para crear un ecosistema táctico completo.
 

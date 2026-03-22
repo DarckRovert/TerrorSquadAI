@@ -42,6 +42,17 @@ TerrorSquadAI está construido con una arquitectura modular que permite funciona
 
 ## 🆕 Módulos v4.0 (Warlord's Command)
 
+### TerrorBoard.lua [GOD-TIER]
+**Pizarra Táctica de Alta Definición**
+
+- **Función**: Interfaz visual para posicionamiento estratégico en raid.
+- **Características**:
+  - Estética "Glass Obsidian" con efectos de escaneo holográfico.
+  - Sistema de celdas con "Corner Brackets" reactivos.
+  - Sincronización en tiempo real con otros miembros de la raid.
+  - Action Bar consolidada para gestión rápida.
+- **Acceso**: Click Derecho en botón de Minimapa o `/board`.
+
 ### EnemyCooldowns.lua
 **Rastreador de Cooldowns Enemigos (PvP)**
 

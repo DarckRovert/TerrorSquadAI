@@ -44,7 +44,7 @@ function PT:RegisterEvents()
     local frame = CreateFrame("Frame")
     frame:RegisterEvent("ADDON_LOADED")
     frame:SetScript("OnEvent", function()
-        if event == "ADDON_LOADED" and arg1 == addonName then
+        if event == "ADDON_LOADED" and arg1 == "TerrorSquadAI" then
             PT:OnAddonLoaded()
         end
         PT.metrics.eventCount = PT.metrics.eventCount + 1

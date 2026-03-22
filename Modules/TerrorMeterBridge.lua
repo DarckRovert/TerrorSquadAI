@@ -316,7 +316,9 @@ SlashCmdList["TMBRIDGE"] = function(msg)
   if msg == "status" then
     DEFAULT_CHAT_FRAME:AddMessage("|cFFFF6600[TerrorMeter Bridge]|r Status:")
     DEFAULT_CHAT_FRAME:AddMessage("  TerrorMeter: " .. (bridge.terrorMeterDetected and "|cFF00FF00Detectado|r" or "|cFFFF0000No encontrado|r"))
-    DEFAULT_CHAT_FRAME:AddMessage("  Jugadores rastreados: " .. table.getn(bridge.raidThreatData))
+    local count = 0
+    for _ in pairs(bridge.raidThreatData) do count = count + 1 end
+    DEFAULT_CHAT_FRAME:AddMessage("  Jugadores rastreados: " .. count)
     
     if bridge.lastThreatData.threat then
       DEFAULT_CHAT_FRAME:AddMessage("  Mi threat: " .. bridge.lastThreatData.threat .. " (" .. (bridge.lastThreatData.threatPercent or 0) .. "%)")

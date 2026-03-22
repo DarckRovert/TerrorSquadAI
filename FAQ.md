@@ -1,6 +1,6 @@
 # ❓ TerrorSquadAI - Preguntas Frecuentes (FAQ)
 
-**Versión 3.0.0** - Actualizado con 8 nuevos módulos
+**Versión 4.2.0** - God-Tier Remaster
 
 Respuestas a las preguntas más comunes sobre TerrorSquadAI.
 
@@ -33,6 +33,18 @@ Respuestas a las preguntas más comunes sobre TerrorSquadAI.
 - **Wipe Predictor** para predecir wipes en raids
 - **Cast Detection** para detectar casts enemigos
 - **Health Monitor** para alertas de HP crítico
+- **TerrorBoard (v4.2)** - Pizarra táctica de vidrio obsidiana con unified minimap access.
+
+### ¿Cómo accedo a la Pizarra Táctica (TerrorBoard)?
+
+Tienes dos formas rápidas:
+1. **Minimap**: Haz **Click Derecho** en el botón de TerrorSquadAI del minimapa.
+2. **Chat**: Escribe el comando `/board`.
+
+### ¿Cómo activo/desactivo la IA ahora?
+
+Para evitar botones extra, el toggle de la IA se ha movido:
+- Presiona **Shift + Click Derecho** en el botón del minimapa.
 
 ### ¿Cómo veo mis estadísticas de PvP?
 

@@ -74,89 +74,95 @@ function UITheme:ApplyColor(texture, colorName)
     end
 end
 
--- Create a styled frame with Terror Squad theme
+-- Create a styled frame with Terror Squad theme (Premium Revision)
 function UITheme:CreateStyledFrame(name, parent, width, height)
     local frame = CreateFrame("Frame", name, parent)
     frame:SetWidth(width)
     frame:SetHeight(height)
     frame:SetFrameStrata("MEDIUM")
     
-    -- Background with gradient effect
+    -- Background with glass/smoke effect
     frame.bg = frame:CreateTexture(nil, "BACKGROUND")
     frame.bg:SetAllPoints()
-    frame.bg:SetTexture(0, 0, 0, 0.85)
+    frame.bg:SetTexture(0, 0, 0, 0.9)
+    -- Apply a very subtle diagonal gradient for "glass" feel
+    if frame.bg.SetGradientAlpha then
+        frame.bg:SetGradientAlpha("HORIZONTAL", 0.1, 0.1, 0.1, 0.8, 0, 0, 0, 1)
+    end
     
-    -- Dark red gradient overlay
+    -- Dark red holographic header gradient
     frame.gradient = frame:CreateTexture(nil, "BACKGROUND", nil, 1)
     frame.gradient:SetPoint("TOP", frame, "TOP", 0, 0)
     frame.gradient:SetWidth(width)
-    frame.gradient:SetHeight(height * 0.3)
-    frame.gradient:SetTexture(0.545, 0, 0, 0.4)
+    frame.gradient:SetHeight(height * 0.4)
+    if frame.gradient.SetGradientAlpha then
+        frame.gradient:SetGradientAlpha("VERTICAL", 0.545, 0, 0, 0.6, 0.545, 0, 0, 0)
+    else
+        frame.gradient:SetTexture(0.545, 0, 0, 0.3)
+    end
     
-    -- Border
-    frame.border = self:CreateBorder(frame)
+    -- High-quality Border (Standard 1.12 Tooltip style for "God-Tier" feel)
+    frame:SetBackdrop({
+        bgFile = nil,
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 16,
+        insets = { left = 4, right = 4, top = 4, bottom = 4 }
+    })
+    frame:SetBackdropBorderColor(0.545, 0, 0, 1) -- Terror Red
     
     return frame
 end
 
--- Create stylized border
-function UITheme:CreateBorder(frame)
-    local border = {}
+-- Glitch/Flicker Effect for critical alerts
+-- Glitch/Flicker Effect (Improved with proxy frame for safety)
+function UITheme:GlitchEffect(obj, duration)
+    if not obj then return end
     
-    -- Top
-    border.top = frame:CreateTexture(nil, "OVERLAY")
-    border.top:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 8)
-    border.top:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 8)
-    border.top:SetHeight(8)
-    border.top:SetTexture(0.545, 0, 0, 1)
+    local proxy = CreateFrame("Frame")
+    local elapsed = 0
+    local originalAlpha = obj:GetAlpha()
     
-    -- Bottom
-    border.bottom = frame:CreateTexture(nil, "OVERLAY")
-    border.bottom:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, -8)
-    border.bottom:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, -8)
-    border.bottom:SetHeight(8)
-    border.bottom:SetTexture(0.545, 0, 0, 1)
+    proxy:SetScript("OnUpdate", function()
+        elapsed = elapsed + arg1
+        if elapsed > duration then
+            obj:SetAlpha(originalAlpha)
+            this:SetScript("OnUpdate", nil)
+            return
+        end
+        
+        -- Neon Glitch Flicker
+        if math.mod(math.floor(elapsed * 15), 2) == 0 then
+            obj:SetAlpha(0.3)
+        else
+            obj:SetAlpha(originalAlpha)
+        end
+    end)
+end
+
+function UITheme:CreateCornerBrackets(frame, size, color)
+    local s = size or 8
+    local c = color or {0, 1, 1, 0.8} -- Default Cyan
     
-    -- Left
-    border.left = frame:CreateTexture(nil, "OVERLAY")
-    border.left:SetPoint("TOPLEFT", frame, "TOPLEFT", -8, 0)
-    border.left:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", -8, 0)
-    border.left:SetWidth(8)
-    border.left:SetTexture(0.545, 0, 0, 1)
+    local points = {
+        {"TOPLEFT", 0, 0, s, 1, 1, s},
+        {"TOPRIGHT", 0, 0, -s, 1, -1, s},
+        {"BOTTOMLEFT", 0, 0, s, -1, 1, -s},
+        {"BOTTOMRIGHT", 0, 0, -s, -1, -1, -s}
+    }
     
-    -- Right
-    border.right = frame:CreateTexture(nil, "OVERLAY")
-    border.right:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 8, 0)
-    border.right:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 8, 0)
-    border.right:SetWidth(8)
-    border.right:SetTexture(0.545, 0, 0, 1)
-    
-    -- Corners (gold accent)
-    border.topLeft = frame:CreateTexture(nil, "OVERLAY", nil, 1)
-    border.topLeft:SetPoint("TOPLEFT", frame, "TOPLEFT", -8, 8)
-    border.topLeft:SetWidth(16)
-    border.topLeft:SetHeight(16)
-    border.topLeft:SetTexture(1, 0.82, 0, 1)
-    
-    border.topRight = frame:CreateTexture(nil, "OVERLAY", nil, 1)
-    border.topRight:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 8, 8)
-    border.topRight:SetWidth(16)
-    border.topRight:SetHeight(16)
-    border.topRight:SetTexture(1, 0.82, 0, 1)
-    
-    border.bottomLeft = frame:CreateTexture(nil, "OVERLAY", nil, 1)
-    border.bottomLeft:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", -8, -8)
-    border.bottomLeft:SetWidth(16)
-    border.bottomLeft:SetHeight(16)
-    border.bottomLeft:SetTexture(1, 0.82, 0, 1)
-    
-    border.bottomRight = frame:CreateTexture(nil, "OVERLAY", nil, 1)
-    border.bottomRight:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 8, -8)
-    border.bottomRight:SetWidth(16)
-    border.bottomRight:SetHeight(16)
-    border.bottomRight:SetTexture(1, 0.82, 0, 1)
-    
-    return border
+    for _, p in ipairs(points) do
+        -- Horizontal
+        local h = frame:CreateTexture(nil, "OVERLAY")
+        h:SetWidth(math.abs(p[4])) h:SetHeight(1)
+        h:SetPoint(p[1], frame, p[1], p[2], p[3])
+        h:SetTexture(c[1], c[2], c[3], c[4])
+        
+        -- Vertical
+        local v = frame:CreateTexture(nil, "OVERLAY")
+        v:SetWidth(1) v:SetHeight(math.abs(p[7]))
+        v:SetPoint(p[1], frame, p[1], p[5], p[6])
+        v:SetTexture(c[1], c[2], c[3], c[4])
+    end
 end
 
 -- Create styled button

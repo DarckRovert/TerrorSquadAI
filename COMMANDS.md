@@ -33,8 +33,16 @@ La mayoría de los módulos de la v4.0 son automáticos y no requieren comandos 
 Desde este panel puedes activar/desactivar:
 - **EnemyCooldowns**: Rastreador de CDs (Mage Blink, Paladin Bubble, etc.)
 - **TacticalRadar**: Flechas 3D para objetivos
+- **TerrorBoard**: Pizarra táctica visual (/board)
 - **KillFeed**: Mensajes de muerte en pantalla
 - **Turtle Modules**: Emerald Sanctum, Lower Karazhan, Logística
+
+### Launcher de Minimapa (Universal)
+| Acción | Resultado |
+|--------|-----------|
+| **Click Izquierdo** | Abrir configuración de TerrorSquadAI |
+| **Click Derecho** | Abrir/Cerrar Pizarra Táctica (TerrorBoard) |
+| **Shift + Click Der** | Activar/Desactivar el Sistema de IA |
 
 ---
 
@@ -138,6 +146,12 @@ Muertes recientes: 1
 | `/tsa autotarget` | Ver estado del auto-target |
 | `/tsa autotarget toggle` | Activar/desactivar auto-target |
 | `/tsa death` | Alias de `/tsa autotarget` |
+
+### TerrorBoard
+| Comando | Descripción |
+|---------|-------------|
+| `/board` | Alternar visibilidad de la Pizarra Táctica |
+| `/tboard` | Alias de `/board` |
 
 ---
 
