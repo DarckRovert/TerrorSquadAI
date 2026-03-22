@@ -103,6 +103,7 @@ function TerrorBoard:CreateMainFrame()
     canvas.grid:SetVertexColor(0, 1, 1, 0.05)
     
     -- Surface Click Handling (Coordinate based)
+    canvas:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     canvas:SetScript("OnClick", function()
         local x, y = GetCursorPosition()
         local s = this:GetEffectiveScale()
@@ -113,8 +114,26 @@ function TerrorBoard:CreateMainFrame()
         local relX = (x/s - left) / width
         local relY = (top - y/s) / height
         
-        TerrorBoard:OnMapClick(relX, relY)
+        if arg1 == "RightButton" then
+            -- Borrado rápido con click derecho
+            TerrorBoard:OnMapClick(relX, relY, true)
+        else
+            TerrorBoard:OnMapClick(relX, relY)
+        end
     end)
+    
+    -- Opacity Controls (+ / -)
+    local opacHeader = CreateFrame("Frame", nil, canvas)
+    opacHeader:SetSize(60, 20)
+    opacHeader:SetPoint("BOTTOMRIGHT", canvas, "BOTTOMRIGHT", -5, 5)
+    
+    local plusBtn = theme:CreateStyledButton("TSAI_OpacPlus", opacHeader, 20, 20, "+")
+    plusBtn:SetPoint("RIGHT", opacHeader, "RIGHT", 0, 0)
+    plusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(0.1) end)
+    
+    local minusBtn = theme:CreateStyledButton("TSAI_OpacMinus", opacHeader, 20, 20, "-")
+    minusBtn:SetPoint("RIGHT", plusBtn, "LEFT", 5, 0)
+    minusBtn:SetScript("OnClick", function() TacticalMap:SetOpacity(-0.1) end)
     
     frame.canvas = canvas
     
@@ -252,11 +271,11 @@ function TerrorBoard:SelectEraser()
     end
 end
 
-function TerrorBoard:OnMapClick(x, y)
-    if self.selectedType == "erase" then
+function TerrorBoard:OnMapClick(x, y, isRightClick)
+    if self.selectedType == "erase" or isRightClick then
         -- Encontrar el marcador más cercano para borrar
         local closestKey = nil
-        local minDist = 0.05
+        local minDist = 0.03 -- Threshold afinado para mayor precisión
         for key, _ in pairs(self.placedMarkers) do
             local kx, ky = self:ParseKey(key)
             local dist = math.sqrt((kx-x)^2 + (ky-y)^2)
@@ -294,6 +313,7 @@ function TerrorBoard:PlaceMarker(x, y, idx)
     markerFrame:Show()
     
     -- God-Tier Feedback
+    TerrorSquadAI.Modules.TacticalMap:TriggerPing(x, y)
     TerrorSquadAI.Modules.UITheme:GlitchEffect(markerFrame.icon, 0.2)
 end
 

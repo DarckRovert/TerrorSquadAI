@@ -115,6 +115,13 @@ function TacticalMap:UpdateBlips()
         if self.blips.player then self.blips.player:Hide() end
     end
     
+    -- Ocultar todos los nombres activos para re-asignar
+    for unit, label in pairs(self.activeLabels) do
+        label:Hide()
+        table.insert(self.labelPool, label)
+        self.activeLabels[unit] = nil
+    end
+    
     -- Aliados (Raid/Party)
     local groupType = "party"
     local count = GetNumPartyMembers()
@@ -129,11 +136,33 @@ function TacticalMap:UpdateBlips()
             local ax, ay = GetPlayerMapPosition(unit)
             if ax > 0 and ay > 0 then
                 self:UpdateBlip(unit, ax, ay, "green")
+                self:ShowUnitLabel(unit, ax, ay)
             else
                 if self.blips.allies[unit] then self.blips.allies[unit]:Hide() end
             end
         end
     end
+    
+    -- Limpiar pings expirados
+    self:UpdatePings()
+end
+
+function TacticalMap:ShowUnitLabel(unit, x, y)
+    local label = table.remove(self.labelPool)
+    if not label then
+        label = self.mapFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    end
+    
+    local name = UnitName(unit)
+    if not name then return end
+    
+    label:SetText("|cFFCCFFFF" .. string.sub(name, 1, 8) .. "|r") -- Truncar nombres largos
+    
+    local fW = self.mapFrame:GetWidth()
+    local fH = self.mapFrame:GetHeight()
+    label:SetPoint("BOTTOM", self.mapFrame, "TOPLEFT", x * fW, -(y * fH) - 12)
+    label:Show()
+    self.activeLabels[unit] = label
 end
 
 function TacticalMap:UpdateBlip(id, x, y, color)
@@ -172,6 +201,56 @@ function TacticalMap:UpdateBlip(id, x, y, color)
     blip.glow:SetWidth(self.config.blipSize * 2 * scale)
     blip.glow:SetHeight(self.config.blipSize * 2 * scale)
     blip.glow:SetAlpha(0.5 - math.sin(now * 5) * 0.2)
+end
+
+function TacticalMap:TriggerPing(x, y)
+    local ping = nil
+    -- Buscar ping inactivo
+    for _, p in ipairs(self.pings) do
+        if not p:IsShown() then ping = p break end
+    end
+    
+    if not ping then
+        ping = CreateFrame("Frame", nil, self.mapFrame)
+        ping:SetWidth(40)
+        ping:SetHeight(40)
+        ping.tex = ping:CreateTexture(nil, "OVERLAY")
+        ping.tex:SetAllPoints()
+        ping.tex:SetTexture("Interface\\Cooldown\\ping4")
+        ping.tex:SetBlendMode("ADD")
+        ping.tex:SetVertexColor(1, 0, 0, 0.8)
+        table.insert(self.pings, ping)
+    end
+    
+    local fW = self.mapFrame:GetWidth()
+    local fH = self.mapFrame:GetHeight()
+    ping:SetPoint("CENTER", self.mapFrame, "TOPLEFT", x * fW, -(y * fH))
+    ping.startTime = GetTime()
+    ping:Show()
+end
+
+function TacticalMap:UpdatePings()
+    local now = GetTime()
+    for _, p in ipairs(self.pings) do
+        if p:IsShown() then
+            local dur = now - p.startTime
+            if dur > 1.0 then
+                p:Hide()
+            else
+                local scale = 1 + dur * 3
+                p:SetWidth(40 * scale)
+                p:SetHeight(40 * scale)
+                p:SetAlpha(1 - dur)
+            end
+        end
+    end
+end
+
+function TacticalMap:SetOpacity(delta)
+    self.config.mapAlpha = math.max(0.1, math.min(1.0, self.config.mapAlpha + delta))
+    for i = 1, 12 do
+        self.mapFrame.tiles[i]:SetAlpha(self.config.mapAlpha)
+    end
 end
 
 function TacticalMap:CreateBlipFrame(id)
