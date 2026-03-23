@@ -600,4 +600,56 @@ function TacticalMap:RegisterPointerSync()
     end)
 end
 
+-- v5.1.7: Control de opacidad del mapa
+function TacticalMap:SetOpacity(delta)
+    local newAlpha = self.config.mapAlpha + delta
+    if newAlpha > 1.0 then newAlpha = 1.0 end
+    if newAlpha < 0.0 then newAlpha = 0.0 end
+    
+    self.config.mapAlpha = newAlpha
+    if self.mapFrame and self.mapFrame.tiles then
+        for i = 1, 12 do
+            self.mapFrame.tiles[i]:SetAlpha(newAlpha)
+        end
+    end
+end
+
+-- v5.1.5: Animacion de Ping (Shockwave) cuando se coloca un marcador
+function TacticalMap:TriggerPing(x, y)
+    if not self.mapFrame then return end
+    
+    -- Reutilizar un frame de ping si está disponible en la pool de TacticalPings (si existe)
+    -- O crear uno local simple para feedback "God-Tier"
+    local ping = CreateFrame("Frame", nil, self.mapFrame)
+    ping:SetWidth(40)
+    ping:SetHeight(40)
+    ping:SetFrameLevel(60) -- Por encima de los punteros
+    
+    local cW = self.mapFrame:GetWidth()
+    local cH = self.mapFrame:GetHeight()
+    ping:SetPoint("CENTER", self.mapFrame, "TOPLEFT", x * cW, -(y * cH))
+    
+    local tex = ping:CreateTexture(nil, "OVERLAY")
+    tex:SetTexture("Interface\\Cooldown\\ping4")
+    tex:SetAllPoints()
+    tex:SetBlendMode("ADD")
+    tex:SetVertexColor(0, 1, 1, 0.8)
+    
+    local elapsed = 0
+    ping:SetScript("OnUpdate", function()
+        elapsed = elapsed + arg1
+        local scale = 1 + elapsed * 3
+        local alpha = 0.8 - elapsed * 2
+        
+        if alpha <= 0 then
+            this:Hide()
+            this:SetScript("OnUpdate", nil)
+        else
+            this:SetWidth(40 * scale)
+            this:SetHeight(40 * scale)
+            tex:SetAlpha(alpha)
+        end
+    end)
+end
+
 return TacticalMap
