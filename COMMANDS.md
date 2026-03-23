@@ -1,11 +1,12 @@
 # 🎮 TerrorSquadAI - Guía Completa de Comandos
 
-**Versión 4.1.1** - Stability Release
+**Versión 6.3.0** - God-Tier Tactical Release
 
-Esta guía contiene todos los comandos disponibles en TerrorSquadAI con ejemplos de uso y casos prácticos.
+Esta guía contiene todos los comandos disponibles en TerrorSquadAI v6.3.0 con ejemplos de uso y casos prácticos.
 
 ## 📋 Índice
 
+- [🆕 Táctica v6.x (The Warlord's Upgrade)](#-táctica-v6x-the-warlords-upgrade)
 - [🆕 Configuración v4.0 (Warlord's Command)](#-configuración-v40-warlords-command)
 - [🆕 Comandos v3.0 (Nuevos)](#-comandos-v30-nuevos)
 - [Comandos Principales](#comandos-principales)
@@ -18,6 +19,28 @@ Esta guía contiene todos los comandos disponibles en TerrorSquadAI con ejemplos
 - [Comandos de Chat](#comandos-de-chat)
 - [Ejemplos de Uso](#ejemplos-de-uso)
 - [Macros Sugeridos](#macros-sugeridos)
+
+---
+
+## 🆕 Táctica v6.x (The Warlord's Upgrade)
+
+Comandos avanzados para el control total del campo de batalla.
+
+### Gestión de Punteros (Real-time)
+| Comando | Descripción |
+|---------|-------------|
+| `/tsai ptr red` | Reclama el puntero ROJO (Exclusivo RL) |
+| `/tsai ptr blue/green/yellow` | Reclama puntero de color para Assist |
+| `/tsai ptr off` | Libera tu puntero actual |
+| `/tsai ptr clear` | (Solo RL) Limpia todos los punteros remotos |
+
+### Control de Pizarra (TerrorBoard)
+| Comando | Descripción |
+|---------|-------------|
+| `/board` | Abre/Cierra la Pizarra Táctica |
+| `/tsai assist on/off` | (Solo RL) Permite que los Assists coloquen marcadores |
+| `/tsai roster` | Reconstruye y sincroniza el panel lateral de roles |
+| `/tsai scene [1-10]` | Carga la escena guardada en el slot y la envía al raid |
 
 ---
 
