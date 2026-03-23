@@ -24,11 +24,10 @@ TerrorSquadAI está construido con una arquitectura modular que permite funciona
 
 | Categoría | Cantidad |
 |-----------|----------|
-| **Total módulos activos** | 39 |
+| **Total módulos activos** | 44 |
 | **Bridges de integración** | 2 |
-| **Módulos v4.0 (nuevos)** | 6 |
-| **Módulos v3.0 (nuevos)** | 8 |
-| **Líneas de código** | ~20,000+ |
+| **Módulos v6.x (RaidMark)** | 3 |
+| **Líneas de código** | ~25,000+ |
 
 ### Desglose por Categoría
 
@@ -38,6 +37,26 @@ TerrorSquadAI está construido con una arquitectura modular que permite funciona
 - **v3.0 New Features**: 8 módulos
 - **Integration Bridges**: 2 módulos (TerrorMeter, DoTimer)
 - **UI**: 2 módulos
+
+---
+
+## 🆕 Táctica v6.x (RaidMark Evolution)
+
+### TerrorBoard.lua [GOD-TIER 2.0]
+**Centro de Comando Táctico Avanzado**
+- **Sincronización**: Basada en protocolo binario ligero (separador `;`).
+- **Anti-Spoof**: Validación de rango RL/Assist en cada mensaje.
+- **Roster Panel**: Integrado con roles (Tank/Heal/DPS) sincronizados.
+
+### TerrorScenes.lua
+**Gestión de Escenarios Tácticos**
+- **Capacidad**: 10 slots con nombres personalizados persistentes.
+- **Broadcast**: Permite cargar y enviar una táctica completa a toda la raid al instante.
+
+### TacticalMap.lua
+**Motor de Proyección Táctica**
+- **Punteros**: 4 punteros simultáneos en tiempo real (30fps).
+- **UX**: Soporta opacidad dinámica y feedback visual de pings.
 
 ---
 
