@@ -267,21 +267,38 @@ function TR:OnUpdate()
                 local ind = self:GetIndicator(poolIndex)
                 ind:SetPoint("CENTER", self.hudFrame, "CENTER", hudY, hudX) -- Swap X/Y feels correct for WoW map rotation quirks often
                 
-                -- Setup Icon (Premium class icon support)
+                -- v6.0 Fix: CLASS_BUTTONS no existe en 1.12.1. Tabla local de colores por clase.
+                -- Extraemos clase aqui para tenerla en scope antes de la tabla.
+                local class = nil
                 if t.unit and UnitIsPlayer(t.unit) then
-                    local _, class = UnitClass(t.unit)
-                    ind.tex:SetTexture("Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes")
-                    local coords = CLASS_BUTTONS[class] -- Standard global in 1.12 for class coords
-                    if coords then
-                        ind.tex:SetTexCoord(coords[1], coords[2], coords[3], coords[4])
-                    end
-                else
-                    ind.tex:SetTexture(TR.icons[t.type])
-                    ind.tex:SetTexCoord(0, 1, 0, 1)
+                    local _, cls = UnitClass(t.unit)
+                    class = cls
                 end
-                
-                local c = TR.colors[t.type]
-                ind.tex:SetVertexColor(c[1], c[2], c[3])
+
+                local CLASS_COLOR = {
+                    WARRIOR = {0.78, 0.61, 0.43},
+                    PALADIN = {0.96, 0.55, 0.73},
+                    HUNTER  = {0.67, 0.83, 0.45},
+                    ROGUE   = {1.00, 0.96, 0.41},
+                    PRIEST  = {1.00, 1.00, 1.00},
+                    MAGE    = {0.41, 0.80, 0.94},
+                    WARLOCK = {0.58, 0.51, 0.79},
+                    DRUID   = {1.00, 0.49, 0.04},
+                    SHAMAN  = {0.14, 0.35, 1.00},
+                }
+                ind.tex:SetTexture("Interface\\Minimap\\PartyRaidBlips")
+                ind.tex:SetTexCoord(0, 0.125, 0, 0.5)
+                if class and CLASS_COLOR[class] then
+                    -- Jugador: color de su clase
+                    local cc = CLASS_COLOR[class]
+                    ind.tex:SetVertexColor(cc[1], cc[2], cc[3])
+                elseif t.type and TR.colors[t.type] then
+                    -- No jugador (target, enemy, etc.): color del tipo
+                    local tc = TR.colors[t.type]
+                    ind.tex:SetVertexColor(tc[1], tc[2], tc[3])
+                else
+                    ind.tex:SetVertexColor(0.7, 0.7, 0.7) -- gris por defecto
+                end
                 
                 -- Rotate Scanline
                 if self.scanLine then
