@@ -2,11 +2,12 @@
 
 TerrorSquadAI está construido con una arquitectura modular que permite funcionalidades especializadas y fácil mantenimiento.
 
-**Versión 4.1.1** - 40+ módulos activos + 2 bridges de integración
+**Versión 6.3.0** - 45+ módulos activos + Bridges God-Tier
 
 ## 📋 Índice
 
 - [Estadísticas de Módulos](#estadísticas-de-módulos)
+- [🆕 Táctica v6.x (RaidMark Evolution)](#-táctica-v6x-raidmark-evolution)
 - [🆕 Módulos v4.0 (Warlord's Command)](#-módulos-v40-warlords-command)
 - [🆕 Módulos v3.0 (Nuevos)](#-módulos-v30-nuevos)
 - [Módulos Principales](#módulos-principales)
