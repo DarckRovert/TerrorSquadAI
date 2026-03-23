@@ -254,6 +254,7 @@ function TerrorBoard:CreateMainFrame()
     if TS and TS.BuildUI then
         TS:BuildUI(actionBar, clearBtn, theme)
     end
+    
     -- Global Scanline Animation
     frame.scanline = frame:CreateTexture(nil, "OVERLAY")
     frame.scanline:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")

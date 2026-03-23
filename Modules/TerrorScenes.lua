@@ -202,7 +202,7 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
                     GameTooltip:AddLine("Click = Seleccionar | 2x Click = Cargar", 0.7, 0.7, 0.7, true)
                 end
             else
-                GameTooltip:SetText("|cFFAAAAAASolt " .. idx .. " (vacio)|r")
+                GameTooltip:SetText("|cFFAAAAAA[Slot " .. idx .. " - vacio]|r")
                 GameTooltip:AddLine("Selecciona y pulsa [S] para guardar.", 0.7, 0.7, 0.7, true)
             end
             GameTooltip:Show()

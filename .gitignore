@@ -1,0 +1,3 @@
+# TerrorSquadAI — Archivos a excluir de Git
+RaidMark_Analysis/
+*.bak

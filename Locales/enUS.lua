@@ -62,5 +62,21 @@ L["BOARD_BROADCAST"] = "SEND TO RAID"
 L["BOARD_MARKER_ASSETS"] = "MARKER ASSETS"
 L["BOARD_TUTORIAL_RIGHT_CLICK"] = "Right-Click: Quick Erase"
 L["BOARD_OPACITY"] = "Opacity"
+-- v6.0 TerrorScenes
+L["SCENE_SAVE"] = "Save Scene"
+L["SCENE_LOAD"] = "Load Scene"
+L["SCENE_SLOT"] = "Slot"
+L["SCENE_EMPTY"] = "(empty)"
+L["SCENE_SAVED"] = "Scene saved"
+L["SCENE_LOADED"] = "Scene loaded"
+L["SCENE_DELETED"] = "Scene deleted"
+L["SCENE_NO_PERM"] = "Only the raid leader can load scenes in a raid."
+L["SCENE_SELECT_FIRST"] = "Select a slot first."
+-- v6.0 Permissions & Network
+L["ASSIST_ENABLED"] = "Assists can place markers: ENABLED"
+L["ASSIST_DISABLED"] = "Assist mode: DISABLED"
+L["BROADCAST_OK"] = "Raid notified."
+L["BROADCAST_FAIL_NO_GROUP"] = "You are not in a group."
+L["BROADCAST_FAIL_NO_PERM"] = "Only the leader or an authorized assist can broadcast."
 
 TerrorSquadAI_Locale_enUS = L
