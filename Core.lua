@@ -5,7 +5,7 @@
 
 -- Namespace
 TerrorSquadAI = {}
-TerrorSquadAI.Version = "6.0.0"
+TerrorSquadAI.Version = "6.1.0"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 
@@ -293,6 +293,33 @@ SlashCmdList["TERRORSQUADAI"] = function(msg)
     elseif cmd == "autotarget" then
         if TerrorSquadAI.Modules.SmartTargeting then
             TerrorSquadAI.Modules.SmartTargeting:ToggleAutoTarget()
+        end
+    -- v6.1: Comandos de puntero
+    elseif cmd == "pointer red" or cmd == "ptr red" then
+        TerrorSquadAI.Modules.TacticalMap:ClaimPointer("RED")
+    elseif cmd == "pointer blue" or cmd == "ptr blue" then
+        TerrorSquadAI.Modules.TacticalMap:ClaimPointer("BLUE")
+    elseif cmd == "pointer green" or cmd == "ptr green" then
+        TerrorSquadAI.Modules.TacticalMap:ClaimPointer("GREEN")
+    elseif cmd == "pointer yellow" or cmd == "ptr yellow" then
+        TerrorSquadAI.Modules.TacticalMap:ClaimPointer("YELLOW")
+    elseif cmd == "pointer off" or cmd == "ptr off" then
+        TerrorSquadAI.Modules.TacticalMap:ReleasePointer()
+    elseif cmd == "pointer clear" or cmd == "ptr clear" then
+        if IsRaidLeader() == 1 then
+            local ch = (GetNumRaidMembers() > 0) and "RAID" or ((GetNumPartyMembers() > 0) and "PARTY" or nil)
+            if ch then SendAddonMessage("TSAI_PTR", "PTR_CLEAR", ch) end
+            TerrorSquadAI:Print("|cFFFF6666[Punteros]|r Todos los punteros limpiados.")
+        else
+            TerrorSquadAI:Print("|cFFFF4444[Error]|r Solo el lider puede limpiar todos los punteros.")
+        end
+    -- v6.2: Comando de roster
+    elseif cmd == "roster" then
+        local TB = TerrorSquadAI.Modules.TerrorBoard
+        if TB then
+            TB:RebuildRoster()
+            TB:UpdateRosterRows()
+            TerrorSquadAI:Print("|cFF00FFAA[Roster]|r Actualizado (" .. tostring(GetNumRaidMembers()) .. " raiders).")
         end
     -- NEW COMMANDS (Phases 5-7)
     elseif cmd == "radar" then

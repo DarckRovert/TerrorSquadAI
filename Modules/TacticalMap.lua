@@ -21,13 +21,28 @@ TacticalMap.labelPool = {}
 TacticalMap.activeLabels = {}
 TacticalMap.pings = {}
 
+-- v6.1: Estado de punteros en tiempo real (inspirado en RaidMark)
+TacticalMap.pointerSlots = {
+    { color = "RED",    r = 1,   g = 0.1, b = 0.1, owner = nil, lastX = nil, lastY = nil },  -- Solo RL
+    { color = "BLUE",   r = 0.3, g = 0.5, b = 1,   owner = nil, lastX = nil, lastY = nil },
+    { color = "GREEN",  r = 0.2, g = 0.9, b = 0.2, owner = nil, lastX = nil, lastY = nil },
+    { color = "YELLOW", r = 1,   g = 0.9, b = 0.1, owner = nil, lastX = nil, lastY = nil },
+}
+TacticalMap.myPointerSlot = nil
+TacticalMap.pointerActive  = false
+TacticalMap.pointerDots    = {}   -- { [playerName] = frame } para puntos remotos
+TacticalMap.ptrTimer       = 0
+TacticalMap.PTR_INTERVAL   = 0.033  -- 30fps max
+
 function TacticalMap:Initialize()
     -- Initialize data structures, but don't create frames until Setup is called
     self.currentMap = nil
     self.labelPool = self.labelPool or {}
     self.activeLabels = self.activeLabels or {}
     self.pings = self.pings or {}
+    self.pointerDots = self.pointerDots or {}
     self:CreatePollingFrame()
+    self:RegisterPointerSync()  -- v6.1: Punteros en tiempo real
 end
 
 function TacticalMap:Setup(container)
@@ -304,6 +319,249 @@ end
 function TacticalMap:SetParent(parent)
     -- Deprecated in v5.1.5, now using Setup(container) for better control
     self:Setup(parent)
+end
+
+-- ============================================================
+-- v6.1: Sistema de Punteros en Tiempo Real (inspirado en RaidMark)
+-- Lua 5.0 / WoW 1.12.1 compatible
+-- ============================================================
+
+-- Obtener canal de broadcast (igual que TerrorBoard)
+local function GetPtrChannel()
+    if GetNumRaidMembers() > 0 then return "RAID" end
+    if GetNumPartyMembers() > 0 then return "PARTY" end
+    return nil
+end
+
+-- Reclamar un slot de puntero por color
+function TacticalMap:ClaimPointer(colorName)
+    local myName = UnitName("player")
+    for i, slot in ipairs(self.pointerSlots) do
+        if slot.color == colorName then
+            if slot.owner then
+                TerrorSquadAI:Print("|cFFFF4444[Puntero]|r El slot " .. colorName .. " ya esta ocupado por " .. slot.owner)
+                return
+            end
+            -- Solo el RL puede reclamar el slot ROJO
+            if i == 1 and not (IsRaidLeader() == 1) then
+                TerrorSquadAI:Print("|cFFFF4444[Puntero]|r El puntero ROJO es exclusivo del Lider de Raid.")
+                return
+            end
+            slot.owner = myName
+            self.myPointerSlot = i
+            self.pointerActive = true
+            local ch = GetPtrChannel()
+            if ch then
+                SendAddonMessage("TSAI_PTR", "PTR_CLAIM;" .. colorName, ch)
+            end
+            TerrorSquadAI:Print("|cFF00FF66[Puntero]|r Puntero " .. colorName .. " reclamado. Mueve el cursor sobre el mapa.")
+            return
+        end
+    end
+end
+
+-- Liberar el slot propio
+function TacticalMap:ReleasePointer()
+    if not self.myPointerSlot then return end
+    local slot = self.pointerSlots[self.myPointerSlot]
+    if slot then
+        local ch = GetPtrChannel()
+        if ch then
+            SendAddonMessage("TSAI_PTR", "PTR_REL;" .. slot.color, ch)
+        end
+        slot.owner = nil
+        slot.lastX = nil
+        slot.lastY = nil
+    end
+    self.myPointerSlot = nil
+    self.pointerActive = false
+    -- Ocultar punto propio
+    local myName = UnitName("player")
+    if self.pointerDots[myName] then
+        self.pointerDots[myName]:Hide()
+    end
+    TerrorSquadAI:Print("|cFFAAAAAA[Puntero]|r Puntero liberado.")
+end
+
+-- Crear o reutilizar un punto visual en el mapa
+function TacticalMap:GetOrCreateDot(playerName, r, g, b)
+    if not self.mapFrame then return nil end
+    if self.pointerDots[playerName] then
+        local d = self.pointerDots[playerName]
+        d.dot:SetVertexColor(r, g, b, 1)
+        return d
+    end
+    local dot = CreateFrame("Frame", nil, self.mapFrame)
+    dot:SetWidth(10)
+    dot:SetHeight(10)
+    dot:SetFrameLevel(50) -- Encima de todo
+
+    dot.dot = dot:CreateTexture(nil, "OVERLAY")
+    dot.dot:SetAllPoints()
+    dot.dot:SetTexture("Interface\\Minimap\\PartyRaidBlips")
+    dot.dot:SetTexCoord(0, 0.125, 0, 0.5)
+    dot.dot:SetVertexColor(r, g, b, 1)
+
+    -- Glow pulsante
+    dot.glow = dot:CreateTexture(nil, "BACKGROUND")
+    dot.glow:SetTexture("Interface\\CharacterFrame\\UI-Party-TargetTransition")
+    dot.glow:SetBlendMode("ADD")
+    dot.glow:SetPoint("CENTER", dot, "CENTER", 0, 0)
+    dot.glow:SetWidth(18)
+    dot.glow:SetHeight(18)
+    dot.glow:SetVertexColor(r, g, b, 0.4)
+
+    dot:Hide()
+    self.pointerDots[playerName] = dot
+    return dot
+end
+
+-- Mover un punto de puntero en el mapa (coordenadas 0-1)
+function TacticalMap:AddRemotePointerDot(sender, colorName, px, py)
+    if not self.mapFrame then return end
+    -- Buscar el color del slot
+    local r, g, b = 1, 1, 1
+    for _, slot in ipairs(self.pointerSlots) do
+        if slot.color == colorName then
+            r, g, b = slot.r, slot.g, slot.b
+            break
+        end
+    end
+    local dot = self:GetOrCreateDot(sender, r, g, b)
+    if not dot then return end
+    local mW = self.mapFrame:GetWidth()
+    local mH = self.mapFrame:GetHeight()
+    if mW == 0 then mW = 400 end
+    if mH == 0 then mH = 300 end
+    dot:ClearAllPoints()
+    dot:SetPoint("CENTER", self.mapFrame, "TOPLEFT", px * mW, -(py * mH))
+    dot:Show()
+    -- Actualizar slot
+    for _, slot in ipairs(self.pointerSlots) do
+        if slot.color == colorName then
+            slot.lastX = px
+            slot.lastY = py
+            break
+        end
+    end
+end
+
+-- Enviar posicion propia del puntero
+function TacticalMap:BroadcastPointerPos(px, py)
+    if not self.myPointerSlot then return end
+    local slot = self.pointerSlots[self.myPointerSlot]
+    if not slot then return end
+    local ch = GetPtrChannel()
+    if not ch then return end
+    SendAddonMessage("TSAI_PTR",
+        "PTR;" .. slot.color .. ";" ..
+        string.format("%.4f", px) .. ";" ..
+        string.format("%.4f", py), ch)
+    -- Mostrar punto propio en el mapa
+    local myName = UnitName("player")
+    self:AddRemotePointerDot(myName, slot.color, px, py)
+end
+
+-- Registrar receptor de punteros y frame de throttle
+function TacticalMap:RegisterPointerSync()
+    -- Frame de throttle para envio (33ms)
+    local ptrThrottle = CreateFrame("Frame", "TSAI_PtrThrottle")
+    ptrThrottle:SetScript("OnUpdate", function()
+        TacticalMap.ptrTimer = TacticalMap.ptrTimer + arg1
+        if TacticalMap.ptrTimer >= TacticalMap.PTR_INTERVAL then
+            TacticalMap.ptrTimer = 0
+            -- Si el puntero esta activo, enviar posicion del cursor sobre el mapa
+            if TacticalMap.pointerActive and TacticalMap.myPointerSlot and TacticalMap.mapFrame then
+                local mx, my = GetCursorPosition()
+                local s = UIParent:GetEffectiveScale()
+                local mL = TacticalMap.mapFrame:GetLeft()
+                local mT = TacticalMap.mapFrame:GetTop()
+                local mW = TacticalMap.mapFrame:GetWidth()
+                local mH = TacticalMap.mapFrame:GetHeight()
+                if mL and mT and mW and mW > 0 and mH and mH > 0 then
+                    local px = (mx/s - mL) / mW
+                    local py = (mT - my/s) / mH
+                    -- Solo enviar si el cursor esta dentro del canvas (0-1)
+                    if px >= 0 and px <= 1 and py >= 0 and py <= 1 then
+                        TacticalMap:BroadcastPointerPos(px, py)
+                    end
+                end
+            end
+        end
+    end)
+
+    -- Receptor de mensajes de puntero
+    local f = CreateFrame("Frame", "TSAI_PtrSync")
+    f:RegisterEvent("CHAT_MSG_ADDON")
+    f:SetScript("OnEvent", function()
+        if arg1 ~= "TSAI_PTR" then return end
+        local sender = arg4
+        if sender == UnitName("player") then return end
+        local msg = arg2 or ""
+
+        -- Parsear mensaje (separador ;, Lua 5.0 compatible)
+        local parts = {}
+        for part in string.gfind(msg .. ";", "([^;]*);") do
+            table.insert(parts, part)
+        end
+        local cmd = parts[1]
+
+        if cmd == "PTR" then
+            local colorName = parts[2]
+            local px = tonumber(parts[3])
+            local py = tonumber(parts[4])
+            if colorName and px and py then
+                TacticalMap:AddRemotePointerDot(sender, colorName, px, py)
+            end
+
+        elseif cmd == "PTR_CLAIM" then
+            local colorName = parts[2]
+            if colorName then
+                for _, slot in ipairs(TacticalMap.pointerSlots) do
+                    if slot.color == colorName and not slot.owner then
+                        slot.owner = sender
+                        break
+                    end
+                end
+            end
+
+        elseif cmd == "PTR_REL" then
+            local colorName = parts[2]
+            if colorName then
+                for _, slot in ipairs(TacticalMap.pointerSlots) do
+                    if slot.color == colorName and slot.owner == sender then
+                        slot.owner = nil
+                        slot.lastX = nil
+                        slot.lastY = nil
+                        -- Ocultar punto del que libero
+                        if TacticalMap.pointerDots[sender] then
+                            TacticalMap.pointerDots[sender]:Hide()
+                        end
+                        break
+                    end
+                end
+            end
+
+        elseif cmd == "PTR_CLEAR" then
+            -- RL limpio todos los slots remotos
+            for i = 2, 4 do
+                TacticalMap.pointerSlots[i].owner = nil
+                TacticalMap.pointerSlots[i].lastX  = nil
+                TacticalMap.pointerSlots[i].lastY  = nil
+            end
+            for name, dot in pairs(TacticalMap.pointerDots) do
+                if name ~= UnitName("player") then
+                    dot:Hide()
+                end
+            end
+            -- Si mi slot era 2,3,4, liberarlo
+            local mySlot = TacticalMap.myPointerSlot
+            if mySlot and mySlot > 1 then
+                TacticalMap.myPointerSlot = nil
+                TacticalMap.pointerActive  = false
+            end
+        end
+    end)
 end
 
 return TacticalMap

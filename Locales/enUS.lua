@@ -78,5 +78,19 @@ L["ASSIST_DISABLED"] = "Assist mode: DISABLED"
 L["BROADCAST_OK"] = "Raid notified."
 L["BROADCAST_FAIL_NO_GROUP"] = "You are not in a group."
 L["BROADCAST_FAIL_NO_PERM"] = "Only the leader or an authorized assist can broadcast."
+-- v6.1 Pointers
+L["PTR_CLAIMED"] = "Pointer %s claimed."
+L["PTR_RELEASED"] = "Pointer released."
+L["PTR_OCCUPIED"] = "Pointer %s is already claimed by %s."
+L["PTR_RL_ONLY"] = "The RED pointer is exclusive to the Raid Leader."
+L["PTR_CLEARED"] = "All pointers cleared."
+-- v6.2 Roster / Roles
+L["ROSTER_TITLE"] = "ROSTER"
+L["ROSTER_UPDATED"] = "Roster updated."
+L["ROLE_TANK"] = "Tank"
+L["ROLE_HEAL"] = "Healer"
+L["ROLE_DPS_M"] = "Melee DPS"
+L["ROLE_DPS_R"] = "Ranged DPS"
+L["ROLE_NONE"] = "No role"
 
 TerrorSquadAI_Locale_enUS = L

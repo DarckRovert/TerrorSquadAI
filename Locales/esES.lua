@@ -78,5 +78,19 @@ L["ASSIST_DISABLED"] = "Assist: DESACTIVADO"
 L["BROADCAST_OK"] = "Raid notificado."
 L["BROADCAST_FAIL_NO_GROUP"] = "No estas en grupo."
 L["BROADCAST_FAIL_NO_PERM"] = "Solo lider o assist puede enviar."
+-- v6.1 Punteros
+L["PTR_CLAIMED"] = "Puntero %s reclamado."
+L["PTR_RELEASED"] = "Puntero liberado."
+L["PTR_OCCUPIED"] = "El puntero %s ya esta ocupado por %s."
+L["PTR_RL_ONLY"] = "El puntero ROJO es exclusivo del Lider de Raid."
+L["PTR_CLEARED"] = "Todos los punteros limpiados."
+-- v6.2 Roster / Roles
+L["ROSTER_TITLE"] = "ROSTER"
+L["ROSTER_UPDATED"] = "Roster actualizado."
+L["ROLE_TANK"] = "Tanque"
+L["ROLE_HEAL"] = "Healer"
+L["ROLE_DPS_M"] = "DPS Melee"
+L["ROLE_DPS_R"] = "DPS Rango"
+L["ROLE_NONE"] = "Sin rol"
 
 TerrorSquadAI_Locale_esES = L

@@ -4,6 +4,19 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 6.1.0 - 2026-03-23
+### Added
+- **v6.1 Punteros en Tiempo Real**: 4 slots de color (ROJO=exclusivo RL, AZUL/VERDE/AMARILLO=Assists). Protocolo `TSAI_PTR` con throttle 33ms. Comandos: `/tsai pointer red|blue|green|yellow|off|clear`.
+- **v6.2 Roster Panel**: Panel de raiders con colores de clase (9 clases). 5 roles asignables (TANK/HEAL/DPS_M/DPS_R/NONE) con sincronización via `TSAI_ROLE`. Comando: `/tsai roster`.
+- **v6.3 Anti-Spoof**: `SenderCanControl()` verifica rango real del sender via `GetRaidRosterInfo()` antes de aceptar comandos de red (igual que RaidMark).
+### Changed
+- `TacticalMap.lua`: Añadido `RegisterPointerSync()` en `Initialize()`. Nuevas funciones: `ClaimPointer`, `ReleasePointer`, `BroadcastPointerPos`, `AddRemotePointerDot`, `GetOrCreateDot`.
+- `TerrorBoard.lua`: Panel de roster integrado en `Initialize`. Nuevas funciones: `RebuildRoster`, `CycleRole`, `BuildRosterPanel`, `UpdateRosterRows`, `RefreshRosterPanel`, `SenderCanControl`.
+- Locales `esES.lua` + `enUS.lua`: 14 nuevas strings para punteros y roles.
+- Versión: 6.0.x → **6.1.0**.
+
+---
+
 ## 🛰️ Versión 6.0.3 - 2026-03-23
 ### Fixed
 - **Layout TerrorBoard**: Marco principal ampliado de 580 a 680px para acomodar la barra de escenas sin desbordamiento.

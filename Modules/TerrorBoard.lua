@@ -39,6 +39,11 @@ function TerrorBoard:Initialize()
     self:CreateMainFrame()
     self:RegisterSlashCommand()
     self:RegisterSync()
+    -- v6.2: Construir panel de roster despues de main frame
+    local theme = TerrorSquadAI.Modules.UITheme
+    if self.mainFrame and theme then
+        self:BuildRosterPanel(self.mainFrame, theme)
+    end
     TerrorSquadAI:Print("|cFF00FF00[TerrorBoard]|r Cargado - /board")
 end
 
@@ -520,6 +525,234 @@ function TerrorBoard:Toggle()
     else
         self:Show()
     end
+end
+
+-- ============================================================
+-- v6.2: Panel de Roster con colores de clase y roles (inspirado en RaidMark)
+-- Lua 5.0 / WoW 1.12.1 compatible
+-- ============================================================
+
+-- Colores de clase (idénticos a RaidMark / CLASS_COLOR de TacticalRadar)
+TerrorBoard.CLASS_COLORS = {
+    WARRIOR = {0.78, 0.61, 0.43},
+    PALADIN = {0.96, 0.55, 0.73},
+    HUNTER  = {0.67, 0.83, 0.45},
+    ROGUE   = {1.00, 0.96, 0.41},
+    PRIEST  = {1.00, 1.00, 1.00},
+    MAGE    = {0.41, 0.80, 0.94},
+    WARLOCK = {0.58, 0.51, 0.79},
+    DRUID   = {1.00, 0.49, 0.04},
+    SHAMAN  = {0.14, 0.35, 1.00},
+}
+
+-- Ciclo de roles (click para ciclar)
+TerrorBoard.ROLE_CYCLE = { "NONE", "TANK", "HEAL", "DPS_M", "DPS_R" }
+TerrorBoard.ROLE_COLORS = {
+    NONE  = {0.5, 0.5, 0.5},
+    TANK  = {0.2, 0.6, 1.0},
+    HEAL  = {0.2, 1.0, 0.4},
+    DPS_M = {1.0, 0.3, 0.3},
+    DPS_R = {1.0, 0.7, 0.2},
+}
+TerrorBoard.ROLE_LABELS = {
+    NONE  = "  ",  TANK = "TK", HEAL = "HE", DPS_M = "DM", DPS_R = "DR",
+}
+
+TerrorBoard.roster = {}
+TerrorBoard.roles  = {}
+TerrorBoard.rosterPanel = nil
+TerrorBoard.rosterButtons = {}
+
+-- Reconstruir roster desde la API 1.12.1
+function TerrorBoard:RebuildRoster()
+    self.roster = {}
+    local n = GetNumRaidMembers()
+    if n > 0 then
+        for i = 1, 40 do
+            local name, rank, _, _, _, classFile = GetRaidRosterInfo(i)
+            if name and name ~= "" then
+                self.roster[name] = {
+                    class = classFile or "UNKNOWN",
+                    rank  = rank or 0,
+                    role  = self.roles[name] or "NONE",
+                }
+            end
+        end
+    elseif GetNumPartyMembers() > 0 then
+        -- Party: incluir jugador + miembros
+        local myName = UnitName("player")
+        local _, cls = UnitClass("player")
+        self.roster[myName] = { class = cls or "UNKNOWN", rank = 0, role = self.roles[myName] or "NONE" }
+        for i = 1, GetNumPartyMembers() do
+            if UnitExists("party"..i) then
+                local pName = UnitName("party"..i)
+                local _, pCls = UnitClass("party"..i)
+                if pName then
+                    self.roster[pName] = { class = pCls or "UNKNOWN", rank = 0, role = self.roles[pName] or "NONE" }
+                end
+            end
+        end
+    end
+    self:RefreshRosterPanel()
+end
+
+-- Ciclar rol de un raider (RL o solitario)
+function TerrorBoard:CycleRole(name)
+    if not name then return end
+    local current = self.roles[name] or "NONE"
+    local newRole = "NONE"
+    for i, r in ipairs(self.ROLE_CYCLE) do
+        if r == current then
+            local nextIdx = math.mod(i, table.getn(self.ROLE_CYCLE)) + 1
+            newRole = self.ROLE_CYCLE[nextIdx]
+            break
+        end
+    end
+    self.roles[name] = newRole
+    if self.roster[name] then self.roster[name].role = newRole end
+    -- Sync al raid
+    local ch = (GetNumRaidMembers() > 0) and "RAID" or ((GetNumPartyMembers() > 0) and "PARTY" or nil)
+    if ch then
+        SendAddonMessage("TSAI_ROLE", name .. ";" .. newRole, ch)
+    end
+    self:RefreshRosterPanel()
+end
+
+-- Actualizar colores de los botones del roster
+function TerrorBoard:RefreshRosterPanel()
+    if not self.rosterPanel then return end
+    for name, btn in pairs(self.rosterButtons) do
+        if self.roster[name] then
+            local role = self.roster[name].role or "NONE"
+            local rc   = self.ROLE_COLORS[role] or {0.5, 0.5, 0.5}
+            local cls  = self.roster[name].class
+            local cc   = self.CLASS_COLORS[cls] or {0.7, 0.7, 0.7}
+            if btn.nameTxt then
+                btn.nameTxt:SetVertexColor(cc[1], cc[2], cc[3])
+            end
+            if btn.roleBtn then
+                btn.roleBtn:SetBackdropBorderColor(rc[1], rc[2], rc[3], 1)
+                btn.roleBtn:SetText(self.ROLE_LABELS[role] or "??")
+            end
+        end
+    end
+end
+
+-- Construir el panel de roster (se llama tras crear el frame principal)
+function TerrorBoard:BuildRosterPanel(parentFrame, theme)
+    if not parentFrame or not theme then return end
+    if self.rosterPanel then return end -- no duplicar
+
+    local panel = CreateFrame("Frame", "TSAI_RosterPanel", parentFrame)
+    panel:SetWidth(150)
+    panel:SetHeight(300)
+    -- Posicionado a la derecha del panel de marcadores
+    panel:SetPoint("TOPLEFT", parentFrame.canvas, "TOPRIGHT", 150, 0)
+    panel:SetFrameLevel(15)
+
+    local bg = panel:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetTexture(0, 0, 0, 0.55)
+    theme:CreateCornerBrackets(panel, 10, {0, 1, 0.5, 0.4})
+
+    local label = panel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    label:SetPoint("TOP", panel, "TOP", 0, -8)
+    label:SetText("|cFF00FFAA[ROSTER]|r")
+
+    self.rosterPanel  = panel
+    self.rosterBtns   = {}
+
+    -- Registrar receptor de roles
+    local rf = CreateFrame("Frame", "TSAI_RoleSync")
+    rf:RegisterEvent("CHAT_MSG_ADDON")
+    rf:SetScript("OnEvent", function()
+        if arg1 ~= "TSAI_ROLE" then return end
+        local msg = arg2 or ""
+        local parts = {}
+        for p in string.gfind(msg .. ";", "([^;]*);") do
+            table.insert(parts, p)
+        end
+        local pName, pRole = parts[1], parts[2]
+        if pName and pRole then
+            TerrorBoard.roles[pName] = pRole
+            if TerrorBoard.roster[pName] then TerrorBoard.roster[pName].role = pRole end
+            TerrorBoard:RefreshRosterPanel()
+        end
+    end)
+
+    -- Registrar evento de cambios de roster
+    local re = CreateFrame("Frame", "TSAI_RosterEvents")
+    re:RegisterEvent("RAID_ROSTER_UPDATE")
+    re:RegisterEvent("PARTY_MEMBERS_CHANGED")
+    re:RegisterEvent("PLAYER_ENTERING_WORLD")
+    re:SetScript("OnEvent", function()
+        TerrorBoard:RebuildRoster()
+    end)
+end
+
+-- Render de filas del roster (hasta 40 raiders)
+function TerrorBoard:UpdateRosterRows()
+    if not self.rosterPanel then return end
+    local theme = TerrorSquadAI.Modules.UITheme
+
+    -- Limpiar botones anteriores
+    for _, btn in pairs(self.rosterButtons) do
+        if btn.nameTxt then btn.nameTxt:Hide() end
+        if btn.roleBtn then btn.roleBtn:Hide() end
+    end
+    self.rosterButtons = {}
+
+    local row = 0
+    for name, info in pairs(self.roster) do
+        if row >= 15 then break end  -- maximo 15 filas visibles
+        local cls = info.class or "UNKNOWN"
+        local cc  = self.CLASS_COLORS[cls] or {0.7, 0.7, 0.7}
+        local role = info.role or "NONE"
+        local rc   = self.ROLE_COLORS[role] or {0.5, 0.5, 0.5}
+
+        -- Nombre del raider (FontString)
+        local txt = self.rosterPanel:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        txt:SetPoint("TOPLEFT", self.rosterPanel, "TOPLEFT", 8, -25 - row * 18)
+        txt:SetText(name)
+        txt:SetVertexColor(cc[1], cc[2], cc[3])
+
+        -- Boton de rol
+        local rBtn = theme:CreateStyledButton("TSAI_Role_"..name, self.rosterPanel, 26, 14, self.ROLE_LABELS[role] or "??")
+        rBtn:SetPoint("LEFT", txt, "RIGHT", 4, 0)
+        rBtn:SetBackdropBorderColor(rc[1], rc[2], rc[3], 1)
+        local capName = name  -- capturar para closure Lua 5.0
+        rBtn:SetScript("OnClick", function()
+            TerrorBoard:CycleRole(capName)
+        end)
+        rBtn:SetScript("OnEnter", function()
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+            GameTooltip:SetText("|cFF00FF66" .. capName .. "|r")
+            GameTooltip:AddLine("Clase: " .. cls, 0.8, 0.8, 0.8)
+            GameTooltip:AddLine("Rol: " .. role, rc[1], rc[2], rc[3])
+            GameTooltip:AddLine("Click = Cambiar rol", 0.6, 0.6, 0.6, true)
+            GameTooltip:Show()
+        end)
+        rBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+        self.rosterButtons[name] = { nameTxt = txt, roleBtn = rBtn }
+        row = row + 1
+    end
+end
+
+-- v6.3: Verificacion anti-spoof del sender (usa GetRaidRosterInfo, igual que RaidMark)
+function TerrorBoard:SenderCanControl(sender)
+    if not sender then return false end
+    if GetNumRaidMembers() == 0 and GetNumPartyMembers() == 0 then return true end
+    for i = 1, 40 do
+        local name, rank = GetRaidRosterInfo(i)
+        if name and name ~= "" then
+            if name == sender then
+                if rank == 2 then return true end  -- rank 2 = RL
+                if rank == 1 and self.config.assistCanPlace then return true end  -- rank 1 = assist
+            end
+        end
+    end
+    return false
 end
 
 TerrorBoard:Initialize()
