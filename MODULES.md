@@ -40,18 +40,17 @@ TerrorSquadAI está construido con una arquitectura modular que permite funciona
 
 ---
 
-## 🆕 Táctica v6.x (RaidMark Evolution)
+## 🆕 Táctica v7.x (RaidMark Evolution)
 
-### TerrorBoard.lua [GOD-TIER 2.0]
-**Centro de Comando Táctico Avanzado**
-- **Sincronización**: Basada en protocolo binario ligero (separador `;`).
-- **Anti-Spoof**: Validación de rango RL/Assist en cada mensaje.
-- **Roster Panel**: Integrado con roles (Tank/Heal/DPS) sincronizados.
+### TerrorBoard v3.0 (Táctica / Comando Central)
+*   **Gestor de Canvas Interactivo**: Renderiza un mapa táctico transparente (1024x768).
+*   **Manejo Unificado de Red**: Filtro `TSAI_BOARD` que enruta mensajes a dibujado. `SenderCanControl()` fue blindado en base a privilegios estrictos de API.
 
-### TerrorScenes.lua
-**Gestión de Escenarios Tácticos**
-- **Capacidad**: 10 slots con nombres personalizados persistentes.
-- **Broadcast**: Permite cargar y enviar una táctica completa a toda la raid al instante.
+### TerrorScenes v7.0 (10 Grand Slots & 40 Escenas)
+*   **Base de datos matricial `grand_slots`**: Almacena instantáneas (snapshots) de las posiciones del tablero, permitiendo **hasta 40 tácticas** (10 Bancos x 4 escenas cada uno). 
+*   **Compatibilidad Total Lua 5.0**: Sistema de guardado y carga reescrito con arrays y for-loops anidados 100% integrados sin desbordar memoria.
+*   **Sub-Menú Desplegable**: UI de 10 botones que despliega un segundo marco inferior con nomenclaturas Romanas.
+*   **Sincronización `BroadcastLoad()`**: Función puente capaz de cargar un snapshot localmente y empaquetarlo instantáneamente directo a la banda a través de NetCore.
 
 ### TacticalMap.lua
 **Motor de Proyección Táctica**

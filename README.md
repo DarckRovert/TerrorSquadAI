@@ -24,10 +24,9 @@ Un radar vectorial que muestra la posición relativa de amenazas y aliados.
 Rastrea las habilidades defensivas y ofensivas del enemigo (Burbujas, Cortes, Blocks).
 *   Funciona en clientes Inglés y Español.
 
-### 5. TerrorBoard v5.0 (Tactical Map) [NUEVO]
-Mapa táctico holográfico con posicionamiento en tiempo real y órdenes geográficas.
-*   **Acceso**: Click Derecho en el botón del minimapa o `/board`.
-*   **Funciones**: Proyección transparente de zona, Blips en tiempo real (Jugador/Aliados), Marcadores de alta precisión (0.0001).
+### 5.- **TerrorBoard v7.0 (Tactical Command Center) [NUEVO]**
+  - **10 Grand Slots (40 escenas):** Permite guardar, nombrar (mediante EditBox) y restaurar hasta 40 disposiciones de raid (10 Bancos x 4 Sub-Escenas).
+  - Punteros dinámicos en tiempo real (4 colores) renderizados simultáneamente en todos los clientes.0001).
 
 ### 6. Interrupt Coordinator
 Organiza cortes de hechizos en el grupo para evitar superposiciones (dos personas cortando lo mismo).
@@ -58,9 +57,8 @@ Cuando estos addons están instalados, TerrorSquadAI los detecta automáticament
 ## 🛠️ Instalación
 
 1.  Extrae la carpeta en `Interface/AddOns/`.
-2.  Asegúrate de tener también `BigWigs`, `TerrorMeter` y `DoTimer` (versiones Terror Squad).
-3.  Entra al juego y escribe `/tsai`.
-
----
-*Desarrollado para El Séquito del Terror.*
+2.  Asegúrate de tener también `BigWigs`, `TerrorMeter` y `DoTimer` (v**Versión actual:** v7.0.0 (The Warlord's Upgrade)
+**Compatibilidad:** World of Warcraft 1.12.1 (Vanilla / Turtle WoW)  
+**Autor:** DarckRovert (elnazzareno)  
+**Tribu:** El Sequito del Terror.*
 *Maximizando la eficiencia en Turtle WoW.*

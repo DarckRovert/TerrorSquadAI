@@ -22,7 +22,7 @@ Esta guía contiene todos los comandos disponibles en TerrorSquadAI v6.3.0 con e
 
 ---
 
-## 🆕 Táctica v6.x (The Warlord's Upgrade)
+## 🆕 Táctica v7.x (The Warlord's Upgrade)
 
 Comandos avanzados para el control total del campo de batalla.
 
@@ -30,17 +30,17 @@ Comandos avanzados para el control total del campo de batalla.
 | Comando | Descripción |
 |---------|-------------|
 | `/tsai ptr red` | Reclama el puntero ROJO (Exclusivo RL) |
-| `/tsai ptr blue/green/yellow` | Reclama puntero de color para Assist |
-| `/tsai ptr off` | Libera tu puntero actual |
-| `/tsai ptr clear` | (Solo RL) Limpia todos los punteros remotos |
+| `/tsai pointer yellow` o `/tsai ptr yellow` | Puntero de Atencion/Precaucion (Amarillo) |
+| `/tsai pointer off` o `/tsai ptr off` | Desactivar tu puntero personal |
+| `/tsai pointer clear` o `/tsai ptr clear` | (Solo RL) Limpiar todos los punteros del mapa. |
+| `/tsai roster` | Fuerza la actualización visual del Panel de Roster desde el estado local de red. |
+| `/tsai scene <grandSlot> <subSlot>` | (Modificado en v7.0) Carga una táctica específica (Grand Slot: 1-10, Sub-Escena: 1-4) al TerrorBoard local y simultáneamente la transmite automáticamente a toda la banda mediante un broadcast de red. Por ejemplo: `/tsai scene 3 2` (Asumiendo que eres RL o asist habilitado). Fallback compatible con `/tsai scene 3` (carga la sub-escena 1 del slot 3). |
 
 ### Control de Pizarra (TerrorBoard)
 | Comando | Descripción |
 |---------|-------------|
 | `/board` | Abre/Cierra la Pizarra Táctica |
 | `/tsai assist on/off` | (Solo RL) Permite que los Assists coloquen marcadores |
-| `/tsai roster` | Reconstruye y sincroniza el panel lateral de roles |
-| `/tsai scene [1-10]` | Carga la escena guardada en el slot y la envía al raid |
 
 ---
 

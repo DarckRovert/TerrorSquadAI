@@ -4,6 +4,13 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🌌 Versión 7.0.0 - 2026-03-23
+- **Grand Slots Expansion:** Evolución masiva del sistema TerrorScenes. Se introducen 10 *Grand Slots* magnos, cada uno con capacidad para 4 sub-escenas independientes.
+- **Capacidad Total:** Ahora se pueden guardar, organizar y cargar hasta **40 formaciones tácticas** distintas.
+- **Interfaz Anidada:** Nuevo panel de sub-slots integrados bajo la barra principal táctica con números romanos.
+- **Migración Inteligente:** El addon detecta automáticamente las escenas de la v6.3.0 y las migra al Grand Slot 1 para evitar pérdidas de datos.
+- **Protocolo de Red:** Actualizado `/tsai scene <grandSlot> <subSlot>` para cargar remotamente usando parámetros dobles.
+
 ## 🛰️ Versión 6.3.0 - 2026-03-23
 ### Added
 - **Scene Naming**: Ahora puedes nombrar tus 10 slots de escena. Aparecerá un cuadro de texto al seleccionar un slot. El nombre persiste al guardar.
