@@ -482,11 +482,16 @@ function TerrorBoard:RegisterSync()
         end
     end)
 
-    -- Receptor de mensajes entrantes
+    -- Receptor de mensajes entrantes (v6.3: anti-spoof verificado)
     local f = CreateFrame("Frame", "TSAI_BoardSync")
     f:RegisterEvent("CHAT_MSG_ADDON")
     f:SetScript("OnEvent", function()
         if arg1 == "TSAI_BOARD" and arg4 ~= UnitName("player") then
+            -- v6.3: Solo aceptar de alguien con permisos reales
+            if not TerrorBoard:SenderCanControl(arg4) then
+                TerrorSquadAI:Debug("[AntiSpoof] TSAI_BOARD rechazado de: " .. (arg4 or "?"))
+                return
+            end
             PlaySound("igMainMenuOpen")
             TerrorSquadAI:Print("|cFF00FF66[TerrorBoard]|r Recibido de " .. (arg4 or "?"))
             TerrorBoard:ReceiveBoard(arg2)
@@ -494,15 +499,26 @@ function TerrorBoard:RegisterSync()
         end
     end)
 
-    -- v6.0: Receptor de control de permisos de Assist
+    -- v6.0: Receptor de control de permisos de Assist (v6.3: solo del RL real)
     local pf = CreateFrame("Frame", "TSAI_BoardPermSync")
     pf:RegisterEvent("CHAT_MSG_ADDON")
     pf:SetScript("OnEvent", function()
         if arg1 == "TSAI_ASSIST" and arg4 ~= UnitName("player") then
-            if arg2 == "1" then
-                TerrorBoard.config.assistCanPlace = true
-            elseif arg2 == "0" then
-                TerrorBoard.config.assistCanPlace = false
+            -- Solo aceptar si el sender es el RL real
+            local isRL = false
+            for i = 1, 40 do
+                local name, rank = GetRaidRosterInfo(i)
+                if name and name == arg4 and rank == 2 then
+                    isRL = true
+                    break
+                end
+            end
+            if isRL then
+                if arg2 == "1" then
+                    TerrorBoard.config.assistCanPlace = true
+                elseif arg2 == "0" then
+                    TerrorBoard.config.assistCanPlace = false
+                end
             end
         end
     end)

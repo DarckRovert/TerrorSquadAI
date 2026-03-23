@@ -5,7 +5,7 @@
 
 -- Namespace
 TerrorSquadAI = {}
-TerrorSquadAI.Version = "6.1.0"
+TerrorSquadAI.Version = "6.2.0"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 
@@ -320,6 +320,14 @@ SlashCmdList["TERRORSQUADAI"] = function(msg)
             TB:RebuildRoster()
             TB:UpdateRosterRows()
             TerrorSquadAI:Print("|cFF00FFAA[Roster]|r Actualizado (" .. tostring(GetNumRaidMembers()) .. " raiders).")
+        end
+    -- v6.2: Cargar escena y broadcast directo
+    elseif string.find(cmd, "^scene %d+$") then
+        local _, _, slotStr = string.find(cmd, "^scene (%d+)$")
+        local slot = tonumber(slotStr)
+        local TS = TerrorSquadAI.Modules.TerrorScenes
+        if TS and slot then
+            TS:BroadcastLoad(slot)
         end
     -- NEW COMMANDS (Phases 5-7)
     elseif cmd == "radar" then

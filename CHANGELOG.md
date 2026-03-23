@@ -4,6 +4,15 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 6.2.0 - 2026-03-23
+### Added
+- **TerrorScenes 10 slots**: Expandido de 4 a 10 slots de escena (2 filas de 5) para igualar la capacidad de RaidMark. GUI actualizado.
+- **BroadcastLoad**: Nuevo método `TerrorScenes:BroadcastLoad(slot)` y comando `/tsai scene [1-10]`. Carga la escena Y la envía al raid en un solo click.
+### Fixed
+- **Anti-Spoof completo**: `TSAI_BOARD` ahora verifica `SenderCanControl()` antes de aplicar marcadores entrantes. `TSAI_ASSIST` verifica rango de RL real antes de cambiar permisos.
+
+---
+
 ## 🛰️ Versión 6.1.0 - 2026-03-23
 ### Added
 - **v6.1 Punteros en Tiempo Real**: 4 slots de color (ROJO=exclusivo RL, AZUL/VERDE/AMARILLO=Assists). Protocolo `TSAI_PTR` con throttle 33ms. Comandos: `/tsai pointer red|blue|green|yellow|off|clear`.

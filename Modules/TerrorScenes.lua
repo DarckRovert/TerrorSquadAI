@@ -6,8 +6,8 @@
 local TerrorScenes = {}
 TerrorSquadAI:RegisterModule("TerrorScenes", TerrorScenes)
 
--- Numero de slots disponibles
-TerrorScenes.NUM_SLOTS = 4
+-- Numero de slots disponibles (v6.2: expandido a 10 como RaidMark)
+TerrorScenes.NUM_SLOTS = 10
 TerrorScenes.ui = {}
 
 -- ============================================================
@@ -121,6 +121,17 @@ function TerrorScenes:Load(slot)
     end
 end
 
+-- v6.2: BroadcastLoad — cargar escena Y enviarla al raid directamente
+function TerrorScenes:BroadcastLoad(slot)
+    if not slot or slot < 1 or slot > self.NUM_SLOTS then return end
+    if not canLoad() then
+        TerrorSquadAI:Print("|cFFFF4444[Escenas]|r Solo el lider de raid puede hacer BroadcastLoad.")
+        return
+    end
+    self:Load(slot)  -- Load ya llama Broadcast si esta en grupo
+    TerrorSquadAI:Print("|cFF00FFFF[Escenas]|r Escena " .. slot .. " enviada al raid.")
+end
+
 function TerrorScenes:Delete(slot)
     if not slot or slot < 1 or slot > self.NUM_SLOTS then return end
     ensureDB()
@@ -142,7 +153,7 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
     -- Frame contenedor de la barra de escenas
     -- Anclado por su RIGHT al LEFT del boton de referencia (broadcastBtn)
     local bar = CreateFrame("Frame", "TSAI_SceneBar", parentBar)
-    bar:SetWidth(175)
+    bar:SetWidth(220)   -- 10 slots en 2 filas + boton Save
     bar:SetHeight(24)
     bar:SetPoint("RIGHT", anchorBtn, "LEFT", -8, 0)
     bar:SetFrameLevel(parentBar:GetFrameLevel() + 1)
@@ -154,7 +165,7 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
     sep:SetPoint("LEFT", bar, "LEFT", 0, 0)
     sep:SetTexture(0, 1, 1, 0.3)
 
-    -- Boton [S] Guardar (usa slot seleccionado)
+    -- Boton [S] Guardar
     local saveBtn = theme:CreateStyledButton("TSAI_SceneSave", bar, 24, 22, "S")
     saveBtn:SetPoint("LEFT", bar, "LEFT", 6, 0)
     saveBtn:SetBackdropBorderColor(0.2, 1, 0.4, 0.9)
@@ -168,23 +179,23 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
     saveBtn:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_TOP")
         GameTooltip:SetText("|cFF00FF66Guardar Escena|r")
-        GameTooltip:AddLine("Guarda marcadores actuales en el slot seleccionado.", 0.8, 0.8, 0.8, true)
+        GameTooltip:AddLine("Guarda marcadores en el slot seleccionado.", 0.8, 0.8, 0.8, true)
         GameTooltip:Show()
     end)
     saveBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-    -- 4 Botones de slot [1][2][3][4]
+    -- 10 Botones de slot [1]-[10] en 2 filas de 5
     self.slotBtns = {}
     for i = 1, self.NUM_SLOTS do
-        local idx = i
-        local btn = theme:CreateStyledButton("TSAI_SceneSlot"..i, bar, 22, 22, tostring(i))
-        btn:SetPoint("LEFT", bar, "LEFT", 6 + 28 + (i-1)*26, 0)
+        local idx  = i
+        local col  = math.mod(i-1, 5)           -- 0..4
+        local row  = math.floor((i-1) / 5)      -- 0 o 1 (dos filas)
+        local btn = theme:CreateStyledButton("TSAI_SceneSlot"..i, bar, 20, 10, tostring(i))
+        btn:SetPoint("TOPLEFT", bar, "TOPLEFT", 6 + 28 + col * 22, -row * 12)
         btn:SetScript("OnClick", function()
             if TerrorScenes.selectedSlot == idx then
-                -- Doble click = cargar
                 TerrorScenes:Load(idx)
             else
-                -- Primer click = seleccionar
                 TerrorScenes.selectedSlot = idx
                 TerrorScenes:RefreshUI()
             end
@@ -198,9 +209,9 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
                 GameTooltip:AddLine("Guardado: " .. (d.savedAt or "?"), 0.8, 0.8, 0.8)
                 GameTooltip:AddLine("Marcadores: " .. (d.count or 0), 0.6, 1, 0.6)
                 if TerrorScenes.selectedSlot == idx then
-                    GameTooltip:AddLine("Click = CARGAR al lienzo", 0.4, 1, 0.4, true)
+                    GameTooltip:AddLine("Click = CARGAR", 0.4, 1, 0.4, true)
                 else
-                    GameTooltip:AddLine("Click = Seleccionar | 2x Click = Cargar", 0.7, 0.7, 0.7, true)
+                    GameTooltip:AddLine("Click = Seleccionar | 2xClick = Cargar", 0.7, 0.7, 0.7, true)
                 end
             else
                 GameTooltip:SetText("|cFFAAAAAA[Slot " .. idx .. " - vacio]|r")
