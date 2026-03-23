@@ -111,8 +111,11 @@ end
 
 function BigWigsIntegration:OnBigWigsStartBar(module, key, text, time)
     if not TerrorSquadAI.DB.bigWigsIntegration then return end
+    if not key then return end -- v5.1.9 Safety Guard
     
-    -- Track timer
+    -- Ensure tables are initialized
+    self.timers = self.timers or {}
+    self.bars = self.bars or {}
     local timerData = {
         module = module,
         key = key,

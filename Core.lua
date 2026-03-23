@@ -5,7 +5,7 @@
 
 -- Namespace
 TerrorSquadAI = {}
-TerrorSquadAI.Version = "5.1.8"
+TerrorSquadAI.Version = "6.0.0"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 
@@ -145,7 +145,9 @@ function TerrorSquadAI:Initialize()
         -- v4.0 Turtle
         "TurtleCore", "EmeraldSanctum", "LowerKarazhan",
         -- v4.0 Logistics
-        "WarLogistics", "TerrorNet", "TerrorBoard",
+        "WarLogistics", "TerrorNet",
+        -- v5.0+ Tactical Map & Board (v6.0: TerrorScenes must precede TerrorBoard)
+        "TerrorScenes", "TacticalMap", "TerrorBoard",
         -- UI last
         "UI", "Config"
     }
@@ -269,6 +271,24 @@ SlashCmdList["TERRORSQUADAI"] = function(msg)
     elseif cmd == "target" or cmd == "objetivo" then
         if TerrorSquadAI.Modules.SmartTargeting then
             TerrorSquadAI.Modules.SmartTargeting:SuggestTarget()
+        end
+    elseif cmd == "assist on" then
+        if IsRaidLeader() == 1 then
+            TerrorSquadAI.Modules.TerrorBoard.config.assistCanPlace = true
+            local channel = (GetNumRaidMembers() > 0) and "RAID" or ((GetNumPartyMembers() > 0) and "PARTY" or nil)
+            if channel then SendAddonMessage("TSAI_ASSIST", "1", channel) end
+            TerrorSquadAI:Print("|cFF00FF66Assists|r pueden enviar marcadores: |cFF00FF00ACTIVADO|r")
+        else
+            TerrorSquadAI:Print("|cFFFF4444[Error]|r Solo el lider puede cambiar permisos.")
+        end
+    elseif cmd == "assist off" then
+        if IsRaidLeader() == 1 then
+            TerrorSquadAI.Modules.TerrorBoard.config.assistCanPlace = false
+            local channel = (GetNumRaidMembers() > 0) and "RAID" or ((GetNumPartyMembers() > 0) and "PARTY" or nil)
+            if channel then SendAddonMessage("TSAI_ASSIST", "0", channel) end
+            TerrorSquadAI:Print("|cFFAAAAAA[Assist]|r Permisos de Assist: |cFFFF4444DESACTIVADO|r")
+        else
+            TerrorSquadAI:Print("|cFFFF4444[Error]|r Solo el lider puede cambiar permisos.")
         end
     elseif cmd == "autotarget" then
         if TerrorSquadAI.Modules.SmartTargeting then

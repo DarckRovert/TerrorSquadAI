@@ -9,7 +9,15 @@ TerrorBoard.config = {
     enabled = true,
     gridSize = 8,
     cellSize = 40,
+    assistCanPlace = false,   -- v6.0: Assists pueden colocar marcadores
 }
+
+-- v6.0: Cola de broadcast con throttle (20 msgs/seg maximo)
+TerrorBoard._pendingBroadcast = nil   -- guardamos el ultimo payload pendiente
+TerrorBoard._timeSinceSend    = 0
+TerrorBoard.SEND_INTERVAL     = 0.05  -- 50ms entre envios
+
+-- v6.0: Frame de throttle de red (se crea en RegisterSync)
 
 -- Raid icons (using WoW's built-in raid target icons)
 TerrorBoard.MARKERS = {
@@ -238,9 +246,14 @@ function TerrorBoard:CreateMainFrame()
     
     -- Tutorial Tip
     local tip = actionBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    tip:SetPoint("LEFT", clearBtn, "RIGHT", 15, 0)
+    tip:SetPoint("LEFT", clearBtn, "RIGHT", 8, 0)
     tip:SetText("|cFF888888" .. (L["BOARD_TUTORIAL_RIGHT_CLICK"] or "R-Click Erase") .. "|r")
-    
+
+    -- v6.0: Barra de escenas (TerrorScenes)
+    local TS = TerrorSquadAI.Modules.TerrorScenes
+    if TS and TS.BuildUI then
+        TS:BuildUI(actionBar, clearBtn, theme)
+    end
     -- Global Scanline Animation
     frame.scanline = frame:CreateTexture(nil, "OVERLAY")
     frame.scanline:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
@@ -372,27 +385,55 @@ function TerrorBoard:ClearAll()
     self.placedMarkers = {}
 end
 
+-- v6.0: Canal de broadcast automatico (Lua 5.0 + 1.12.1)
+local function GetBroadcastChannel()
+    if GetNumRaidMembers() > 0 then return "RAID" end
+    if GetNumPartyMembers() > 0 then return "PARTY" end
+    return nil
+end
+
+-- v6.0: Verificacion de permisos de envio (RL o Assist autorizado)
+local function CanBroadcast()
+    if GetNumRaidMembers() == 0 and GetNumPartyMembers() == 0 then return true end
+    if IsRaidLeader() == 1 then return true end
+    if (IsRaidOfficer() == 1) and TerrorBoard.config.assistCanPlace then return true end
+    return false
+end
+
 function TerrorBoard:Broadcast()
-    if not IsRaidLeader() and not IsRaidOfficer() then
-        TerrorSquadAI:Print("|cFFFF0000[TerrorBoard]|r Solo lider puede enviar")
+    local L = TerrorSquadAI.L
+
+    if not CanBroadcast() then
+        TerrorSquadAI:Print("|cFFFF4444[TerrorBoard]|r " .. (L["BROADCAST_FAIL_NO_PERM"] or "Solo lider o assist puede enviar."))
         return
     end
-    
+
     local parts = {}
     for key, idx in pairs(self.placedMarkers) do
-        table.insert(parts, key..":"..idx)
+        if key and idx then
+            table.insert(parts, key .. ":" .. idx)
+        end
     end
     local data = table.concat(parts, ";")
-    
-    if GetNumRaidMembers() > 0 then
-        SendAddonMessage("TSAI_BOARD", data, "RAID")
-        TerrorSquadAI:Print("|cFF00FF00[TerrorBoard]|r Enviado!")
-    elseif GetNumPartyMembers() > 0 then
-        SendAddonMessage("TSAI_BOARD", data, "PARTY")
-        TerrorSquadAI:Print("|cFF00FF00[TerrorBoard]|r Enviado!")
-    else
-        TerrorSquadAI:Print("|cFFFF0000[TerrorBoard]|r No estas en grupo")
+
+    local channel = GetBroadcastChannel()
+    if not channel then
+        TerrorSquadAI:Print("|cFFFF4444[TerrorBoard]|r " .. (L["BROADCAST_FAIL_NO_GROUP"] or "No estas en grupo."))
+        return
     end
+
+    -- v6.0: Encolar payload para envio throttled
+    self._pendingBroadcast = { channel = channel, data = data }
+end
+
+-- v6.0: Envio inmediato (interno, llamado desde throttle frame)
+function TerrorBoard:_FlushBroadcast()
+    local L = TerrorSquadAI.L
+    if not self._pendingBroadcast then return end
+    local payload = self._pendingBroadcast
+    self._pendingBroadcast = nil
+    SendAddonMessage("TSAI_BOARD", payload.data, payload.channel)
+    TerrorSquadAI:Print("|cFF00FF66[TerrorBoard]|r " .. (L["BROADCAST_OK"] or "Raid notificado."))
 end
 
 function TerrorBoard:ReceiveBoard(data)
@@ -425,14 +466,38 @@ function TerrorBoard:ReceiveBoard(data)
 end
 
 function TerrorBoard:RegisterSync()
-    local f = CreateFrame("Frame")
+    -- v6.0: Frame de throttle de red
+    local throttleFrame = CreateFrame("Frame", "TSAI_BroadcastThrottle")
+    throttleFrame:SetScript("OnUpdate", function()
+        TerrorBoard._timeSinceSend = TerrorBoard._timeSinceSend + arg1
+        if TerrorBoard._timeSinceSend >= TerrorBoard.SEND_INTERVAL then
+            TerrorBoard._timeSinceSend = 0
+            TerrorBoard:_FlushBroadcast()
+        end
+    end)
+
+    -- Receptor de mensajes entrantes
+    local f = CreateFrame("Frame", "TSAI_BoardSync")
     f:RegisterEvent("CHAT_MSG_ADDON")
     f:SetScript("OnEvent", function()
         if arg1 == "TSAI_BOARD" and arg4 ~= UnitName("player") then
             PlaySound("igMainMenuOpen")
-            TerrorSquadAI:Print("|cFF00FF00[TerrorBoard]|r Recibido de "..arg4)
+            TerrorSquadAI:Print("|cFF00FF66[TerrorBoard]|r Recibido de " .. (arg4 or "?"))
             TerrorBoard:ReceiveBoard(arg2)
             TerrorBoard:Show()
+        end
+    end)
+
+    -- v6.0: Receptor de control de permisos de Assist
+    local pf = CreateFrame("Frame", "TSAI_BoardPermSync")
+    pf:RegisterEvent("CHAT_MSG_ADDON")
+    pf:SetScript("OnEvent", function()
+        if arg1 == "TSAI_ASSIST" and arg4 ~= UnitName("player") then
+            if arg2 == "1" then
+                TerrorBoard.config.assistCanPlace = true
+            elseif arg2 == "0" then
+                TerrorBoard.config.assistCanPlace = false
+            end
         end
     end)
 end

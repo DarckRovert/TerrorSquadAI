@@ -4,6 +4,26 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 6.0.0 - 2026-03-23
+### Added
+- **Network Throttle**: Cola de broadcast throttled (máx. 20 msgs/seg) en `TerrorBoard.lua`. Evita spam en el canal RAID al enviar marcadores masivamente.
+- **TerrorScenes**: Nuevo módulo `TerrorScenes.lua`. Sistema de 4 slots de escena guardables en `SavedVariables`. Guarda/carga configuraciones completas de marcadores tácticos.
+- **Assist Permissions**: Nuevo comando `/tsai assist on/off`. El RL puede delegar permisos de envío a los Assists vía `SendAddonMessage`.
+- **Auto Canal**: Detección automática de canal (RAID/PARTY) antes de cada envío.
+- **Locale v6.0**: Nuevas strings en `esES.lua` para escenas, permisos y feedback de red.
+### Changed
+- `TerrorBoard.lua`: `Broadcast()` refactorizado con cola diferida para evitar saturación de red.
+- `Core.lua`: Orden de inicialización corregido: `TerrorScenes` → `TacticalMap` → `TerrorBoard`.
+- `TerrorSquadAI.toc`: Versión 6.0.0, registrado `TerrorScenes.lua`.
+
+---
+
+## 🛰️ Versión 5.1.9 - 2026-03-22
+### Fixed
+- **BigWigs Hotfix**: Corregido error crítico `table index is nil` en `BigWigsIntegration.lua` provocado por timers sin llave válida. Estabilidad total en encuentros de boss.
+
+---
+
 ## 🛰️ Versión 5.1.8 - 2026-03-22
 ### Fixed
 - **Certificación Final "No-Error"**: Auditoría completa de todos los módulos para asegurar estabilidad total en Turtle WoW (1.12.1).

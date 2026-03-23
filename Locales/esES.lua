@@ -62,5 +62,21 @@ L["BOARD_BROADCAST"] = "ENVIAR RAID"
 L["BOARD_MARKER_ASSETS"] = "ACTIVOS TÁCTICOS"
 L["BOARD_TUTORIAL_RIGHT_CLICK"] = "Click Derecho: Borrado Rápido"
 L["BOARD_OPACITY"] = "Opacidad"
+-- v6.0 TerrorScenes
+L["SCENE_SAVE"] = "Guardar Escena"
+L["SCENE_LOAD"] = "Cargar Escena"
+L["SCENE_SLOT"] = "Slot"
+L["SCENE_EMPTY"] = "(vacio)"
+L["SCENE_SAVED"] = "Escena guardada"
+L["SCENE_LOADED"] = "Escena cargada"
+L["SCENE_DELETED"] = "Escena borrada"
+L["SCENE_NO_PERM"] = "Solo el lider puede cargar escenas en raid."
+L["SCENE_SELECT_FIRST"] = "Selecciona un slot primero."
+-- v6.0 Permisos y red
+L["ASSIST_ENABLED"] = "Assists pueden mover marcadores: ACTIVADO"
+L["ASSIST_DISABLED"] = "Assist: DESACTIVADO"
+L["BROADCAST_OK"] = "Raid notificado."
+L["BROADCAST_FAIL_NO_GROUP"] = "No estas en grupo."
+L["BROADCAST_FAIL_NO_PERM"] = "Solo lider o assist puede enviar."
 
 TerrorSquadAI_Locale_esES = L
