@@ -205,7 +205,7 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
             ensureDB()
             local d = TerrorSquadAIDB.scenes[idx]
             if d then
-                GameTooltip:SetText("|cFFFFD700Slot " .. idx .. "|r")
+                GameTooltip:SetText("|cFFFFD700" .. (d.name or "Slot " .. idx) .. "|r")
                 GameTooltip:AddLine("Guardado: " .. (d.savedAt or "?"), 0.8, 0.8, 0.8)
                 GameTooltip:AddLine("Marcadores: " .. (d.count or 0), 0.6, 1, 0.6)
                 if TerrorScenes.selectedSlot == idx then
@@ -224,6 +224,36 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
     end
 
     self.ui.bar = bar
+    
+    -- v6.3: EditBox para el nombre de la escena (flotante sobre la barra)
+    local nameBox = CreateFrame("EditBox", "TSAI_SceneNameEdit", bar)
+    nameBox:SetWidth(150)
+    nameBox:SetHeight(18)
+    nameBox:SetPoint("BOTTOM", bar, "TOP", 15, 4)
+    nameBox:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+    nameBox:SetAutoFocus(false)
+    nameBox:SetTextInsets(4, 4, 0, 0)
+    nameBox:SetBackdrop({
+        bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+        edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+        edgeSize = 8, insets = {left=1, right=1, top=1, bottom=1}
+    })
+    nameBox:SetScript("OnEnterPressed", function()
+        this:ClearFocus()
+        if TerrorScenes.selectedSlot then
+            ensureDB()
+            local s = TerrorSquadAIDB.scenes[TerrorScenes.selectedSlot]
+            if s then
+                s.name = this:GetText()
+                TerrorScenes:RefreshUI()
+                TerrorSquadAI:Print("|cFF00FF66[Escenas]|r Nombre de slot " .. TerrorScenes.selectedSlot .. " actualizado.")
+            end
+        end
+    end)
+    nameBox:SetScript("OnEscapePressed", function() this:ClearFocus() end)
+    nameBox:Hide()
+    self.ui.nameBox = nameBox
+
     self:RefreshUI()
     return bar
 end
