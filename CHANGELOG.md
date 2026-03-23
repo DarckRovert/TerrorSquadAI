@@ -4,6 +4,21 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 6.0.3 - 2026-03-23
+### Fixed
+- **Layout TerrorBoard**: Marco principal ampliado de 580 a 680px para acomodar la barra de escenas sin desbordamiento.
+- **Panel lateral**: Ampliado a 130x310px para mostrar correctamente los 8 marcadores tácticos en 2 columnas.
+- **Barra de Escenas**: Anclaje corregido a `RIGHT -> LEFT de broadcastBtn` para posicionamiento preciso.
+- **Tip colisión**: Eliminado solapamiento entre el texto tutorial y la barra de escenas.
+
+---
+
+## 🛰️ Versión 6.0.2 - 2026-03-23
+### Fixed
+- **TacticalRadar**: Error `attempt to index global 'CLASS_BUTTONS' (a nil value)` en línea 274. `CLASS_BUTTONS` no existe en WoW 1.12.1. Corregido con tabla local `CLASS_COLOR` por clase + scope correcto de variable `class` + fallback para unidades no-jugador.
+
+---
+
 ## 🛰️ Versión 6.0.0 - 2026-03-23
 ### Added
 - **Network Throttle**: Cola de broadcast throttled (máx. 20 msgs/seg) en `TerrorBoard.lua`. Evita spam en el canal RAID al enviar marcadores masivamente.

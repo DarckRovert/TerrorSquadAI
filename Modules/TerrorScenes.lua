@@ -140,10 +140,11 @@ function TerrorScenes:BuildUI(parentBar, anchorBtn, theme)
     local L = TerrorSquadAI.L
 
     -- Frame contenedor de la barra de escenas
+    -- Anclado por su RIGHT al LEFT del boton de referencia (broadcastBtn)
     local bar = CreateFrame("Frame", "TSAI_SceneBar", parentBar)
-    bar:SetWidth(160)
+    bar:SetWidth(175)
     bar:SetHeight(24)
-    bar:SetPoint("LEFT", anchorBtn, "RIGHT", 10, 0)
+    bar:SetPoint("RIGHT", anchorBtn, "LEFT", -8, 0)
     bar:SetFrameLevel(parentBar:GetFrameLevel() + 1)
 
     -- Separador visual izquierdo

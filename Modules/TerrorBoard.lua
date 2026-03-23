@@ -58,7 +58,7 @@ function TerrorBoard:CreateMainFrame()
     -- Main frame (Glass Obsidian Design)
     local theme = TerrorSquadAI.Modules.UITheme
     local L = TerrorSquadAI.L
-    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, 580, 440)
+    local frame = theme:CreateStyledFrame("TerrorBoard_Main", UIParent, 680, 440)
     frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     frame:SetFrameStrata("DIALOG")
     frame:SetFrameLevel(10) -- Base Level
@@ -157,8 +157,8 @@ function TerrorBoard:CreateMainFrame()
     
     -- Marker Selector Side-Panel
     local panel = CreateFrame("Frame", nil, frame)
-    panel:SetWidth(120)
-    panel:SetHeight(300)
+    panel:SetWidth(130)
+    panel:SetHeight(310)
     panel:SetPoint("LEFT", canvas, "RIGHT", 15, 0)
     panel:SetFrameLevel(15)
     
@@ -244,15 +244,15 @@ function TerrorBoard:CreateMainFrame()
     broadcastBtn:SetBackdropBorderColor(1, 0, 0, 0.8) -- Danger Red
     broadcastBtn:SetScript("OnClick", function() TerrorBoard:Broadcast() end)
     
-    -- Tutorial Tip
+    -- Tutorial Tip (encima de la barra de escenas, ya no colisiona)
     local tip = actionBar:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    tip:SetPoint("LEFT", clearBtn, "RIGHT", 8, 0)
+    tip:SetPoint("LEFT", clearBtn, "RIGHT", 12, 0)
     tip:SetText("|cFF888888" .. (L["BOARD_TUTORIAL_RIGHT_CLICK"] or "R-Click Erase") .. "|r")
 
-    -- v6.0: Barra de escenas (TerrorScenes)
+    -- v6.0: Barra de escenas (TerrorScenes) — anclada DESPUES del broadcastBtn, al medio del espacio libre
     local TS = TerrorSquadAI.Modules.TerrorScenes
     if TS and TS.BuildUI then
-        TS:BuildUI(actionBar, clearBtn, theme)
+        TS:BuildUI(actionBar, broadcastBtn, theme)
     end
     
     -- Global Scanline Animation
