@@ -4,6 +4,16 @@ Historial de cambios y versiones de TerrorSquadAI.
 
 ---
 
+## 🛰️ Versión 6.3.0 - 2026-03-23
+### Added
+- **Scene Naming**: Ahora puedes nombrar tus 10 slots de escena. Aparecerá un cuadro de texto al seleccionar un slot. El nombre persiste al guardar.
+- **Tooltip dinámico**: Los tooltips de escena ahora muestran el nombre personalizado, fecha de guardado y recuento de marcadores.
+### Fixed
+- **Anti-Spoof Pointers**: El sistema de punteros (`TSAI_PTR`) ahora verifica el rango del jugador antes de permitir reclamar o mover punteros. El puntero ROJO es exclusivo del RL.
+- **Seguridad de Red**: Auditoría completa de todos los mensajes de addon entrantes para prevenir inyecciones de marcadores de usuarios sin rango.
+
+---
+
 ## 🛰️ Versión 6.2.0 - 2026-03-23
 ### Added
 - **TerrorScenes 10 slots**: Expandido de 4 a 10 slots de escena (2 filas de 5) para igualar la capacidad de RaidMark. GUI actualizado.

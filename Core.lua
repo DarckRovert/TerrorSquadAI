@@ -5,7 +5,7 @@
 
 -- Namespace
 TerrorSquadAI = {}
-TerrorSquadAI.Version = "6.2.0"
+TerrorSquadAI.Version = "6.3.0"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 

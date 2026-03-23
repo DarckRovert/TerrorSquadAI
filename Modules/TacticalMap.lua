@@ -34,6 +34,29 @@ TacticalMap.pointerDots    = {}   -- { [playerName] = frame } para puntos remoto
 TacticalMap.ptrTimer       = 0
 TacticalMap.PTR_INTERVAL   = 0.033  -- 30fps max
 
+-- v6.3: Verificacion anti-spoof interna para punteros
+local function SenderCanControlPTR(sender, color)
+    if not sender then return false end
+    if GetNumRaidMembers() == 0 and GetNumPartyMembers() == 0 then return true end
+    
+    local senderRank = -1
+    for i = 1, 40 do
+        local name, rank = GetRaidRosterInfo(i)
+        if name == sender then
+            senderRank = rank
+            break
+        end
+    end
+    
+    if senderRank == 2 then return true end -- RL puede todo
+    if senderRank == 1 then
+        -- Assist solo puede colores 2, 3, 4 (Blue, Green, Yellow)
+        if color == "RED" then return false end
+        return true
+    end
+    return false
+end
+
 function TacticalMap:Initialize()
     -- Initialize data structures, but don't create frames until Setup is called
     self.currentMap = nil
@@ -511,12 +534,15 @@ function TacticalMap:RegisterPointerSync()
             local px = tonumber(parts[3])
             local py = tonumber(parts[4])
             if colorName and px and py then
-                TacticalMap:AddRemotePointerDot(sender, colorName, px, py)
+                -- v6.3 Anti-spoof: Verificar que el sender sea el dueño del slot o tenga rango
+                if SenderCanControlPTR(sender, colorName) then
+                    TacticalMap:AddRemotePointerDot(sender, colorName, px, py)
+                end
             end
 
         elseif cmd == "PTR_CLAIM" then
             local colorName = parts[2]
-            if colorName then
+            if colorName and SenderCanControlPTR(sender, colorName) then
                 for _, slot in ipairs(TacticalMap.pointerSlots) do
                     if slot.color == colorName and not slot.owner then
                         slot.owner = sender
@@ -528,12 +554,12 @@ function TacticalMap:RegisterPointerSync()
         elseif cmd == "PTR_REL" then
             local colorName = parts[2]
             if colorName then
+                -- Al liberar no revisamos permiso estricto, pero sí que sea su propio slot
                 for _, slot in ipairs(TacticalMap.pointerSlots) do
                     if slot.color == colorName and slot.owner == sender then
                         slot.owner = nil
                         slot.lastX = nil
                         slot.lastY = nil
-                        -- Ocultar punto del que libero
                         if TacticalMap.pointerDots[sender] then
                             TacticalMap.pointerDots[sender]:Hide()
                         end
@@ -543,22 +569,32 @@ function TacticalMap:RegisterPointerSync()
             end
 
         elseif cmd == "PTR_CLEAR" then
-            -- RL limpio todos los slots remotos
-            for i = 2, 4 do
-                TacticalMap.pointerSlots[i].owner = nil
-                TacticalMap.pointerSlots[i].lastX  = nil
-                TacticalMap.pointerSlots[i].lastY  = nil
-            end
-            for name, dot in pairs(TacticalMap.pointerDots) do
-                if name ~= UnitName("player") then
-                    dot:Hide()
+            -- v6.3: PTR_CLEAR solo del Raid Leader real
+            local isRL = false
+            for i = 1, 40 do
+                local name, rank = GetRaidRosterInfo(i)
+                if name == sender and rank == 2 then
+                    isRL = true
+                    break
                 end
             end
-            -- Si mi slot era 2,3,4, liberarlo
-            local mySlot = TacticalMap.myPointerSlot
-            if mySlot and mySlot > 1 then
-                TacticalMap.myPointerSlot = nil
-                TacticalMap.pointerActive  = false
+            
+            if isRL or (GetNumRaidMembers() == 0 and GetNumPartyMembers() == 0) then
+                for i = 2, 4 do
+                    TacticalMap.pointerSlots[i].owner = nil
+                    TacticalMap.pointerSlots[i].lastX  = nil
+                    TacticalMap.pointerSlots[i].lastY  = nil
+                end
+                for name, dot in pairs(TacticalMap.pointerDots) do
+                    if name ~= UnitName("player") then
+                        dot:Hide()
+                    end
+                end
+                local mySlot = TacticalMap.myPointerSlot
+                if mySlot and mySlot > 1 then
+                    TacticalMap.myPointerSlot = nil
+                    TacticalMap.pointerActive  = false
+                end
             end
         end
     end)

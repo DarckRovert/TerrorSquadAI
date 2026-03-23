@@ -71,10 +71,12 @@ function TerrorScenes:Save(slot)
         return
     end
 
+    local existing = TerrorSquadAIDB.scenes[slot] or {}
     TerrorSquadAIDB.scenes[slot] = {
         markers = markers,
         savedAt = getTimestamp(),
         count   = table.getn(markers),
+        name    = existing.name or ("Escena " .. slot),
     }
     self:RefreshUI()
     TerrorSquadAI:Print("|cFF00FF66[Escenas]|r Slot " .. slot .. " guardado (" .. table.getn(markers) .. " marcadores).")
@@ -268,10 +270,15 @@ function TerrorScenes:RefreshUI()
             local d = TerrorSquadAIDB.scenes[i]
             local sel = (self.selectedSlot == i)
             local hasDat = d and d.markers
+            
             if sel then
-                -- Seleccionado: borde cian brillante
+                -- Seleccionado: borde cian brillante y mostrar EditBox
                 btn:SetBackdropBorderColor(0, 1, 1, 1)
                 btn:SetBackdropColor(0, 0.15, 0.2, 1)
+                if self.ui.nameBox then
+                    self.ui.nameBox:Show()
+                    self.ui.nameBox:SetText(d and d.name or "Nueva Escena")
+                end
             elseif hasDat then
                 -- Tiene datos: borde dorado
                 btn:SetBackdropBorderColor(1, 0.85, 0, 0.9)
