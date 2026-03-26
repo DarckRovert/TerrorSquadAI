@@ -287,6 +287,19 @@ function SP:UpdateDisplay(status)
     -- Escuadrón
     text = text .. string.format("Escuadrón: |cFFFFD700%d/%d|r vivos\n", status.squadAlive, status.squadMembers)
     
+    -- Integracion Sequito (Ecosistema)
+    local integrations = ""
+    if pfUI then integrations = integrations .. "|cff00ccffpfUI|r " end
+    if HealBot then integrations = integrations .. "|cff00ccffHB|r " end
+    if AtlasTW then integrations = integrations .. "|cff00ccffAT|r " end
+    if AUX_TRADING_API then integrations = integrations .. "|cff00ccffAUX|r " end
+    if pfQuest then integrations = integrations .. "|cff00ccffPQ|r " end
+    if WCS_Brain or WCS_BrainCore then integrations = integrations .. "|cff00ccffWCS|r " end
+    
+    if integrations ~= "" then
+        text = text .. "Ecosistema: " .. integrations .. "\n"
+    end
+    
     -- AI
     local aiStatus = status.aiActive and "|cFF00FF00Activo|r" or "|cFFFF0000Inactivo|r"
     text = text .. "AI: " .. aiStatus .. "\n"

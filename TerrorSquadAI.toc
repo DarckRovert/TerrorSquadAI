@@ -83,6 +83,12 @@ Modules\TerrorBoard.lua
 # Modules - Integration
 Modules\TerrorMeterBridge.lua
 Modules\DoTimerBridge.lua
+Modules\pfUIBridge.lua
+Modules\HealBotBridge.lua
+Modules\AtlasBridge.lua
+Modules\AuxTradingBridge.lua
+Modules\pfQuestBridge.lua
+Modules\WCSBrainBridge.lua
 
 # Modules - UI (load last)
 Modules\UI.lua

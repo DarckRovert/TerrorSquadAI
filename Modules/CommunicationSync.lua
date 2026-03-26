@@ -22,6 +22,8 @@ CommunicationSync.MSG_PRIORITY_TARGET = "PRIORITY_TARGET"
 CommunicationSync.MSG_STRATEGY = "STRATEGY"
 CommunicationSync.MSG_SYNC_REQUEST = "SYNC_REQUEST"
 CommunicationSync.MSG_SYNC_RESPONSE = "SYNC_RESPONSE"
+CommunicationSync.MSG_AI_STRATEGY = "AI_STRATEGY"
+CommunicationSync.MSG_QUEST_SYNC = "QUEST_SYNC"
 
 function CommunicationSync:Initialize()
     self.connectedMembers = {}
@@ -167,6 +169,10 @@ function CommunicationSync:ProcessMessage(message, sender)
         self:OnSyncRequestReceived(message, sender)
     elseif message.type == self.MSG_SYNC_RESPONSE then
         self:OnSyncResponseReceived(message, sender)
+    elseif message.type == self.MSG_AI_STRATEGY then
+        self:OnAIStrategyReceived(message, sender)
+    elseif message.type == self.MSG_QUEST_SYNC then
+        self:OnQuestSyncReceived(message, sender)
     end
 end
 
@@ -239,6 +245,30 @@ function CommunicationSync:OnStrategyReceived(message, sender)
     if message.data.approach then
         TerrorSquadAI:Debug("Strategy update from " .. sender .. ": " .. message.data.approach)
     end
+end
+
+function CommunicationSync:OnAIStrategyReceived(message, sender)
+    if not message.data then return end
+    
+    -- Display WCS_Brain decisions from squad members
+    local spell = message.data.spell or "Unknown"
+    local target = message.data.target or "Unknown"
+    
+    if TerrorSquadAI.Modules.AlertSystem then
+        TerrorSquadAI.Modules.AlertSystem:ShowAlert({
+            type = "tactical",
+            message = "[" .. sender .. "] AI: " .. spell .. " -> " .. target,
+            duration = 3,
+            icon = "Interface\\Icons\\Spell_Shadow_Shadowbolt"
+        })
+    end
+end
+
+function CommunicationSync:OnQuestSyncReceived(message, sender)
+    if not message.data then return end
+    
+    -- Just debug for now
+    TerrorSquadAI:Debug("Quest update from " .. sender .. ": QID " .. (message.data.qid or "?"))
 end
 
 function CommunicationSync:OnSyncRequestReceived(message, sender)

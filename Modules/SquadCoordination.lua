@@ -48,22 +48,22 @@ end
 function SquadCoordination:InitializeFormations()
     self.formations = {
         spread = {
-            name = "Formación Dispersa",
-            description = "Dispérsense para evitar AoE",
+            name = "Formacion Dispersa",
+            description = "Dispersense para evitar AoE",
             minDistance = 10
         },
         tight = {
-            name = "Formación Compacta",
-            description = "Agrúpense para curación y buffs",
+            name = "Formacion Compacta",
+            description = "Agrupense para curacion y buffs",
             minDistance = 5
         },
         line = {
-            name = "Formación en Línea",
-            description = "Formen una línea para asalto coordinado",
+            name = "Formacion en Linea",
+            description = "Formen una linea para asalto coordinado",
             minDistance = 8
         },
         mobile = {
-            name = "Formación Móvil",
+            name = "Formacion Movil",
             description = "Mantengan movilidad para PvP",
             minDistance = 12
         }

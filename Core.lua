@@ -6,7 +6,7 @@
 -- Namespace
 TerrorSquadAI = {}
 TerrorSquadAI.Name = "TerrorSquadAI"
-TerrorSquadAI.Version = "7.0.0"
+TerrorSquadAI.Version = "9.3.0"
 TerrorSquadAI.Author = "DarckRovert"
 TerrorSquadAI.Clan = "El Sequito del Terror"
 
@@ -149,6 +149,8 @@ function TerrorSquadAI:Initialize()
         "WarLogistics", "TerrorNet",
         -- v5.0+ Tactical Map & Board (v6.0: TerrorScenes must precede TerrorBoard)
         "TerrorScenes", "TacticalMap", "TerrorBoard",
+        -- Bridges
+        "pfUIBridge", "HealBotBridge", "AtlasBridge", "AuxTradingBridge", "pfQuestBridge", "WCSBrainBridge",
         -- UI last
         "UI", "Config"
     }
