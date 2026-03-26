@@ -93,4 +93,13 @@ L["ROLE_DPS_M"] = "DPS Melee"
 L["ROLE_DPS_R"] = "DPS Rango"
 L["ROLE_NONE"] = "Sin rol"
 
+-- v9.3.0 Grand Slots Architecture
+L["GRAND_SLOT_TITLE"] = "Slot Principal %d"
+L["SUB_SCENE_LABEL"] = "Sub-Escena %d"
+L["SCENE_GRAND_SLOT"] = "Grand Slot"
+L["VERSION_DISPLAY"] = "TerrorSquadAI v9.3.0 [God-Tier]"
+L["FORTY_SCENES_LOADED"] = "40 escenas tacticas cargadas."
+L["SLOTS_MENU_TITLE"] = "ESCENAS TACTICAS (40 Total)"
+L["SLOT_EMPTY_LABEL"] = "(sin escena)"
+
 TerrorSquadAI_Locale_esES = L
