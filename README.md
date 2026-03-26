@@ -1,4 +1,4 @@
-# TerrorSquadAI (La Mente Maestra) - Séquito Edition v7.0
+# TerrorSquadAI (La Mente Maestra) — v9.3.0 [God-Tier] Séquito Edition
 
 ![banner táctico](https://raw.githubusercontent.com/DarckRovert/TerrorSquadAI/master/media/banner.png)
 
