@@ -1,43 +1,88 @@
 # El Ecosistema del Terror - Manual de Inteligencia Colectiva
-
-> **Versión del Documento:** 1.0
+> **Versión del Documento:** 9.3.0 [God-Tier]
 > **Arquitecto:** DarckRovert / Elnazzareno
-> **Núcleo:** TerrorSquadAI v5.0
+> **Núcleo:** TerrorSquadAI + WCS_Brain
 
 ## 🌐 ¿Qué es el Ecosistema?
-No has instalado 4 addons separados. Has instalado una **Red Neural de Combate** de 10 piezas.
-Estos diez componentes (TerrorSquadAI, WCS_Brain, BigWigs, TerrorMeter, DoTimer, pfUI, HealBot, aux-addon, pfQuest, Atlas-TW) han sido unificados para "hablar" entre sí en tiempo real.
+No has instalado addons separados. Has instalado una **Red Neural de Combate** de 10 piezas construida a medida para Turtle WoW.
+Estos componentes interactúan en tiempo real mediante canales de comunicación ocultos para sincronizar la información táctica, la sanación, y la economía de toda la banda.
 
 ---
 
-## 🧩 Los Cuatro Componentes
+## 🗺️ Diagrama de Arquitectura de la Mente de Enjambre (SquadMind)
 
-### 1. El Cerebro: TerrorSquadAI (TSAI)
-Es el comandante central. Toma decisiones, sugiere estrategias, maneja el radar y coordina a los otros addons.
+```mermaid
+graph TD
+    %% Estilos
+    classDef core fill:#2C0000,stroke:#FF0000,stroke-width:2px,color:#fff;
+    classDef combat fill:#4B0082,stroke:#9370DB,stroke-width:2px,color:#fff;
+    classDef intel fill:#003366,stroke:#00BFFF,stroke-width:2px,color:#fff;
+    classDef ui fill:#004d00,stroke:#00ff00,stroke-width:2px,color:#fff;
+    classDef extern fill:#404040,stroke:#808080,stroke-width:1px,color:#fff;
 
-### 2. El Vínculo Maestro: WCS_Brain
-La integración definitiva para el control total del combate y aprendizaje mediante IA.
+    %% Nodos Core
+    TSAI["🧠 TerrorSquadAI<br/>(Comandante Táctico)"]:::core
+    WCS["🔮 WCS_Brain<br/>(Vínculo Maestro)"]:::core
 
-### 3. Los Ojos: BigWigs + TerrorLink
-Detección de habilidades de jefes y fases en tiempo real.
+    %% Nodos Combate
+    TM["📊 TerrorMeter<br/>(Sistema Nervioso / Threat)"]:::combat
+    HB["💚 HealBot<br/>(Soporte Vital)"]:::combat
+    BW["👁️ BigWigs + TerrorLink<br/>(Detección Jefes)"]:::combat
+    DT["⏱️ DoTimer<br/>(Reloj Biológico)"]:::combat
 
-### 4. El Sistema Nervioso: TerrorMeter (Threat)
-Regulador de seguridad y monitoreo de amenaza global.
+    %% Nodos Inteligencia & Logística
+    AUX["💰 aux-addon<br/>(Mercado & Logística)"]:::intel
+    ATLAS["🗺️ Atlas-TW<br/>(Estrategia Dungeon)"]:::intel
+    PFQ["📜 pfQuest<br/>(Inteligencia de Entorno)"]:::intel
 
-### 5. El Reloj Biológico: DoTimer
-Rastreo y optimización de DoTs y debuffs.
+    %% Nodos UI
+    PFUI["🖥️ pfUI<br/>(HUD Premium)"]:::ui
 
-### 6. La Interfaz: pfUI (Séquito Edition)
-Visualización premium y alertas centralizadas.
+    %% Conexiones principales
+    WCS <==>|OnPlayerAction / Sugerencias| TSAI
+    
+    %% Conexiones con Combat
+    TM ==>|Datos de DPS y Amenaza| TSAI
+    TM ==>|Alerta de Agro (ToT)| HB
+    BW ==>|Timers de Habilidades| TSAI
+    BW -.->|Avisos en Interfaz| HB
+    DT ==>|Falta de DoTs| WCS
+    
+    %% Conexiones Tácticas
+    TSAI ==>|Prioridades de Sanación| HB
+    TSAI ==>|Alertas Tácticas| PFUI
+    
+    %% Conexiones de Inteligencia
+    PFQ -.->|Rutas Tácticas| ATLAS
+    AUX -.->|Stock del Banco Clan| WCS
 
-### 7. El Soporte Vital: HealBot
-Coordinación de sanación y monitoreo de supervivencia.
+    %% Jugadores conectados
+    SquadA(("🎮 Jugador A<br/>(Tanque)")):::extern
+    SquadB(("🎮 Jugador B<br/>(Healer)")):::extern
+    SquadC(("🎮 Jugador C<br/>(Warlock)")):::extern
 
-### 8. La Inteligencia de Mercado: aux-addon
-Análisis de economía y alertas de trading para el clan.
+    %% Conexión de Red Séquito
+    SquadA -.->|TerrorNet SYNC| TSAI
+    SquadB -.->|TerrorNet SYNC| TSAI
+    SquadC -.->|TerrorNet SYNC| TSAI
+```
 
-### 9. La Guía de Campaña: pfQuest + Atlas-TW
-Navegación táctica y sincronización de objetivos de misión.
+---
+
+## 🧩 Los 10 Componentes del Ecosistema
+
+| Componente | Rol en el Ecosistema | Integración Principal |
+|:---|:---|:---|
+| **1. TerrorSquadAI** | **El Cerebro:** Comandante central. Toma decisiones grupales, sugiere estrategias y maneja la pizarra holográfica (`/board`). | Se comunica con todos. |
+| **2. WCS_Brain** | **El Vínculo Maestro:** Automatiza la toma de decisiones por clase (especializado en Warlock) basándose en telemetría de grupo. | Habla con `TerrorSquadAI`. |
+| **3. TerrorMeter** | **El Sistema Nervioso:** Monitorea la amenaza exacta matemáticamente y previene Wipes deteniendo el DPS con alertas. | Avisa a `TSAI` y `HealBot`. |
+| **4. HealBot** | **El Soporte Vital:** Sistema Sanador. Muestra cuadros rojos de alerta cuando un aliado tiene el Aggro peligroso. | Escucha a `TerrorMeter` y `BigWigs`. |
+| **5. BigWigs** | **Los Ojos:** Mediante el *TerrorLink*, detecta los lanzamientos de jefes e informa al cerebro para coordinar defensas grupales. | Avisa a `TerrorSquadAI`. |
+| **6. DoTimer** | **El Reloj Biológico:** Rastreo y optimización de DoTs cruzados en los enemigos. | Habla con `WCS_Brain`. |
+| **7. pfUI**| **La Interfaz Visual:** Provee el marco unificado para proyectar nuestra información táctica sin desorden. | Hub central. |
+| **8. pfQuest** | **La Guía de Campo:** Traducido al español (Séquito Edition) para la navegación táctica de farmeo del clan. | Inteligencia Global. |
+| **9. Atlas-TW** | **Mapas de Guerra:** Sincronización de mapas de Dungeons para que el Comandante trace rutas en la pizarra táctica. | Conecta con `TerrorBoard`. |
+| **10. aux-addon** | **Inteligencia de Mercado:** Rastrea precios para la gestión de donaciones y préstamos en el *WCS_ClanBank*. | Conecta con `WCS_ClanBank`. |
 
 ---
 
@@ -45,45 +90,18 @@ Navegación táctica y sincronización de objetivos de misión.
 
 Si estás en una Raid donde varios jugadores usan este Ecosistema:
 
-1.  **Visión Compartida (TerrorNet):**
-    *   Si el Jugador A detecta un enemigo en su radar, el Jugador B lo verá instantáneamente en su propio radar, aunque esté lejos.
-    *   *Uso:* Emboscadas PvP y evitar patrullas en PvE.
+1. **Visión Compartida (TerrorNet):**
+   * El Jugador A detecta un enemigo en su radar. Automáticamente, el Jugador B lo verá en su propio radar, aunque esté a 100 yardas.
 
-2.  **Defensa Coordinada:**
-    *   Si el Tanque Principal usa *Muro de Escudo*, todos los TSAI de la raid lo registran.
-    *   TSAI avisará al Tanque Secundario: *"Muro de Escudo activo en Tanque 1. NO lo uses todavía"*.
-    *   *Resultado:* Cadenas de defensa perfectas sin usar chat de voz.
+2. **Defensa Coordinada e Inmediata:**
+   * El Tanque Principal activa *Muro de Escudo*. The SquadMind avisa a los demás tanques: *"Muro de Escudo activo en Tanque 1. Reserva el tuyo."*
+   * *Resultado:* Cadenas de supervivencia sin saturar Discord.
 
-3.  **Predicción de Amenaza:**
-    *   TerrorMeter envía datos de amenaza de todos a todos. TSAI calcula quién romperá aggro en los próximos 3 segundos y avisa preventivamente.
-
----
-
-## 🛠️ Comandos Globales
-
-| Comando | Función |
-| :--- | :--- |
-| `/tsai config` | Abre el panel central de configuración. |
-| `/tsai radar` | Activa/Desactiva el Radar Táctico 2.0. |
-| `/board` | Abre la Pizarra Táctica (TerrorBoard). |
-| `/tsai hud` | Activa/Desactiva los hologramas de pantalla. |
-| `/terrorlink` | Verifica la conexión con BigWigs. |
-| `/tmbridge status` | Verifica la conexión con TerrorMeter. |
-| `/tsadot toggle` | Activa/Desactiva sugerencias inteligentes de DoTs. |
-| `/tsai net` | Muestra el estado de la red global (TerrorNet). |
+3. **Prevención de Suicidios (Aggro Control):**
+   * *TerrorMeter* detecta un Mago al 95% de amenaza. 
+   * Le grita al Mago: *"¡ALTO AL FUEGO!"*
+   * Alerta a *HealBot* de los Healers: *"¡Preparen escudos en el Mago!"*
 
 ---
 
-## ⚠️ Solución de Problemas
-
-**P: ¿Por qué no veo a mis compañeros en el Radar?**
-R: Asegúrate de que ellos también tienen TerrorSquadAI instalado y activado (`/tsai net` para verificar).
-
-**P: BigWigs no avisa a la IA.**
-R: Escribe `/terrorlink`. Si dice "OFF", escribe `/terrorlink` de nuevo. Asegúrate de cargar BigWigs al entrar al juego.
-
-**P: TerrorMeter no muestra mis datos.**
-R: Asegúrate de estar en un grupo o banda. La sincronización requiere un canal de grupo.
-
----
-*Hecho para la Hermandad: El Sequito del Terror. Larga vida a Turtle WoW.*
+> *"No pienses como un jugador, piensa como un enjambre."* — **El Séquito del Terror**
