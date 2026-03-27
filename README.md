@@ -145,3 +145,15 @@ Pizarra interactiva de alta definici√≥n con sincronizaci√≥n en tiempo real hacia
 *Creado por DarckRovert para "El S√©quito del Terror" ‚Äî Turtle WoW.*
 *Ver `MODULES.md` para documentaci√≥n detallada de cada m√≥dulo.*
 *Ver `COMMANDS.md` para la lista completa de comandos.*
+
+---
+
+## ?? Comunidad y Gobernanza
+
+Este proyecto es parte del ecosistema **El SÈquito del Terror**. Nos comprometemos a mantener un ambiente sano y profesional:
+
+- ?? **[CÛdigo de Conducta](./CODE_OF_CONDUCT.md)**: Nuestras normas de convivencia.
+- ?? **[GuÌa de ContribuciÛn](./CONTRIBUTING.md)**: CÛmo ayudar a expandir este addon.
+- ??? **[Licencia](./LICENSE)**: Este proyecto est· bajo la Licencia MIT.
+
+---
