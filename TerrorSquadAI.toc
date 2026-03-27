@@ -1,7 +1,7 @@
-﻿## Interface: 11200
+## Interface: 11200
 ## Title: |cFF8B0000Terror Squad AI|r
 ## Notes: Módulo avanzado de IA para la gestión de escuadrones y toma de decisiones en combate. Creado por DarckRovert para El Sequito del Terror.
-## Author: DarckRovert (elnazzareno)
+## Author: El Séquito del Terror
 ## Version: 9.3.0 [God-Tier]
 ## SavedVariables: TerrorSquadAIDB
 ## SavedVariablesPerCharacter: TerrorSquadAICharDB
