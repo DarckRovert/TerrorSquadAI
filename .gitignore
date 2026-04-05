@@ -1,3 +1,11 @@
-# TerrorSquadAI — Archivos a excluir de Git
-RaidMark_Analysis/
-*.bak
+# TerrorSquadAI GitIgnore
+*.toc.bak
+*.lua.bak
+*.xml.bak
+*.DS_Store
+*.swp
+*.tmp
+*~
+LAST_DEPLOY.txt
+.vscode/
+RaidMark_Analysis/temp/

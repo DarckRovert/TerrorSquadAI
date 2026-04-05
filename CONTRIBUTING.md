@@ -1,14 +1,13 @@
-# Contribuyendo a El Séquito del Terror
+# Contributing to TerrorSquadAI (El Séquito Edition)
 
-¡Gracias por tu interés en potenciar nuestro arsenal!
+Este es un fork especializado en la coordinación táctica de mascotas y guardianes.
 
-## Cómo contribuir
-1. Haz un fork del repositorio.
-2. Crea una rama para tu mejora (git checkout -b feature/mejora).
-3. Envía tus cambios vía Pull Request.
+## Reglas Técnicas
+1. **Pet AI Logic**: Cualquier nueva decisión táctica debe procesarse a través del motor `Core.lua`.
+2. **Lua 5.0**: Evitar operadores modernos.
 
-## Estándares
-- Compatibilidad total con **Turtle WoW (Lua 5.0)**.
-- Documentación clara en los commits.
+## Desarrollo
+Forkea, mejora y abre un PR en GitHub.
 
-Lee nuestro [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) antes de empezar.
+---
+© 2026 **DarckRovert**.
