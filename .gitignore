@@ -1,15 +1,35 @@
-# Visual Studio Code
-.vscode/
-*.code-workspace
+# TerrorSquadAI [Collective Intelligence] — gitignore 🛠️🤖
 
-# Temporary & Local files
+# WoW Excluidos
 *.bak
-*.cache
+*.old
+*.tmp
 *.log
-deploy_log.txt
-LAST_DEPLOY.txt
 
-# Gravity AI 
-.system_generated/
-_knowledge.json
-bridge_log_tail.txt
+# Workspace & OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Tactical Data & Raid Logs
+TerrorSquadAI_Logs.lua
+TerrorSquadAI_Audits.lua
+*.jpg
+*.png
+
+# Lua Binaries
+*.lua.compiled
+*.luac
+
+# Archivos de Desarrollo Local
+!README.md
+!CHANGELOG.md
+!LICENSE
+!CONTRIBUTING.md
+!CODE_OF_CONDUCT.md
+!SECURITY.md
+!wiki/
+!ECOSYSTEM.md
+!INTEGRATION.md
+!MODULES.md
+!SPANISH_LOCALIZATION.md

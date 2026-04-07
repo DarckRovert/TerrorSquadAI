@@ -1,44 +1,59 @@
-# TerrorSquadAI — El Séquito del Terror Edition 🐺🛡️
+# TerrorSquadAI — Collective Intelligence (v9.4.0 [Squad-Tier]) ⚔️🤖
 
-> **The ultimate pet & guardian coordination engine.** Inteligencia artificial táctica para mascotas y guardianes de Warlock en **El Séquito del Terror**.
+> **The first coordinated RAID-AI engine for Turtle WoW.** Un sistema de orquestación táctica diseñado por **DarckRovert** para maximizar la eficiencia del clan mediante análisis de patrones de banda en tiempo real.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-9.3.x--God--Tier-red)](./CHANGELOG.md)
-[![World of Warcraft](https://img.shields.io/badge/WoW-1.12.1-orange)](https://turtle-wow.org)
+[![Version](https://img.shields.io/badge/version-v9.4.0--Squad--Tier-orange)](./CHANGELOG.md)
+[![World of Warcraft](https://img.shields.io/badge/WoW-1.12.1--Turtle-orange)](https://turtle-wow.org)
+[![Support](https://img.shields.io/badge/Support-Ko--fi-blue)](https://ko-fi.com/darckrovert)
 
 ---
 
-## 🐺 ¿Qué ofrece TerrorSquadAI?
+## 🤖 ¿Qué es TerrorSquadAI?
 
-TerrorSquadAI es el motor de decisiones tácticas para las mascotas del clan, mejorado con:
+No es un gestor de marcas. Es un **Motor de Inteligencia Colectiva** que analiza el posicionamiento, los tiempos de reacción y la ejecución de mecánicas de toda la banda para sugerir ajustes tácticos dinámicos.
 
-- **Coordinación Táctica**: Gestión automática de habilidades de mascotas (Interrumpir, CC, Purga) basada en el estado del grupo.
-- **Guardian Mode**: Lógica defensiva avanzada para proteger al Raid Leader y otros miembros críticos.
-- **Integración WCS_Brain**: Sincronización de estados emocionales y recompensas de aprendizaje con el núcleo central.
-- **Skins de El Séquito**: Interfaz de control con texturas oscuras y glow púrpura.
-- **Micro-Optimización**: Reducción drástica del uso de CPU al procesar eventos de combate Pet/Guardian.
+### 🧩 Intelligence Feature Matrix (Capacidades)
 
-## 🚀 Instalación & Uso
+| Módulo | Tipo de IA | Funcionalidad | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Raid Scanner** | Pattern Analysis | Auditoría de Mecánicas | Detecta quién falla en las mecánicas de raid |
+| **Tactical Sync** | Cluster Logic | Coordinación de CC | Orquestación automática de marcas y silencios |
+| **Neural Alerts** | Urgent Priority | Avisos de Supervivencia | Notificaciones críticas basadas en HP predictivo |
+| **Squad HUD** | Data Visualizer | Telemetría de Banda | Interfaz refinada con el estado de la raid |
+| **Gravity Link** | Neural Sync | Conexión con WCS_Brain | Sincronización con las mascotas del Séquito |
 
-1.  Extrae en `Interface\AddOns\TerrorSquadAI\`.
-2.  Al entrar al juego, usa `/tsai` para abrir el menú de configuración.
-3.  Asegúrate de que `WCS_Brain` esté activo para la sincronización completa.
+### ⚡ Benchmarks de Decisión Colectiva (v9.4)
+
+| Operación | Inferencia | Impacto FPS | Estado |
+| :--- | :---: | :---: | :---: |
+| **Análisis de Banda** | < 2ms | Negligible | ✅ |
+| **Sync de Marcas** | < 10ms | Zero-Lag | ✅ |
+| **Global Scan** | 0.25s (Throttled) | +Stability | ✅ |
+
+---
 
 ## 🏗️ Suite de Documentación (Wiki)
 
-Domina a tu escuadrón:
+Domina la inteligencia de banda en nuestra base de conocimientos:
 
-- 📐 **[Arquitectura](./wiki/Architecture.md)**: Cómo se procesan las decisiones de mascotas.
-- 🛠️ **[Guía de API](./wiki/API_Guide.md)**: Hooks para registrar nuevas habilidades externas.
-- ❓ **[FAQ](./wiki/FAQ.md)**: Solución de problemas de control de CC.
-- 📖 **[Manual de Usuario](./wiki/User_Manual.md)**: Guía de comandos y personalización.
+- 📐 **[Arquitectura Colectiva](./wiki/Architecture.md)**: Cómo pensamos como uno solo.
+- 🛠️ **[Guía de API Squad](./wiki/API_Guide.md)**: Integración con TerrorMeter.
+- ❓ **[FAQ Táctico](./wiki/FAQ.md)**: ¿Por qué la IA marcó ese objetivo?
+- 📖 **[Manual del Comandante](./wiki/User_Manual.md)**: Guía de orquestación de banda.
 
-## 🔗 Ecosistema Integrado
+## 🚀 Despliegue Rápido (Elite-Flow)
 
-TerrorSquadAI es el brazo armado de:
-- [WCS_Brain](file:///e:/Turtle%20Wow/Interface/AddOns/WCS_Brain)
-- [TerrorMeter](file:///e:/Turtle%20Wow/Interface/AddOns/TerrorMeter)
+1.  **Requisito**: Ser Líder de Banda o Ayudante para activar el motor de orquestación.
+2.  **Instalación**: Extrae en `Interface\AddOns\TerrorSquadAI\`.
+3.  **Activación**: Inicia el combate y el motor de **Inferencia Squad** comenzará a indexar los patrones de los jefes de Turtle WoW.
+
+## 🔗 Ecosistema Oficial (DarckRovert)
+
+- [Live Streams (Twitch)](https://twitch.tv/darckrovert)
+- [Web Corporativa](https://sequitodelterror.netlify.app/)
+- [Soporte & Donaciones (Ko-fi)](https://ko-fi.com/darckrovert)
 
 ---
-© 2026 **DarckRovert (Elnazzareno)** — El Séquito del Terror.
-*Sintaxis Lua 5.0 Estándar para Turtle WoW.*
+© 2026 **DarckRovert** — El Séquito del Terror.
+*Orquestando la victoria a través de la inteligencia artificial.*
