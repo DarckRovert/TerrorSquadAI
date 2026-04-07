@@ -1,11 +1,15 @@
-# TerrorSquadAI GitIgnore
-*.toc.bak
-*.lua.bak
-*.xml.bak
-*.DS_Store
-*.swp
-*.tmp
-*~
-LAST_DEPLOY.txt
+# Visual Studio Code
 .vscode/
-RaidMark_Analysis/temp/
+*.code-workspace
+
+# Temporary & Local files
+*.bak
+*.cache
+*.log
+deploy_log.txt
+LAST_DEPLOY.txt
+
+# Gravity AI 
+.system_generated/
+_knowledge.json
+bridge_log_tail.txt
