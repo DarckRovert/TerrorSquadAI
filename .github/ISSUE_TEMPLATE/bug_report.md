@@ -1,34 +1,35 @@
----
-name: "🐞 Bug Report — Collective Intelligence (TerrorSquadAI)"
-about: "Reporta un error técnico en el motor de orquestación v9.4.0+"
-title: "[BUG] Descripción breve del problema"
+﻿---
+name: "ðŸž Bug Report â€” Collective Intelligence (TerrorSquadAI)"
+about: "Reporta un error tÃ©cnico en el motor de orquestaciÃ³n v1.0.4+"
+title: "[BUG] DescripciÃ³n breve del problema"
 labels: ["bug", "triage"]
 assignees: darckrovert
 
 ---
 
-## 📝 Descripción del Problema
-Describe de manera directa y técnica qué anomalía presenta el motor de orquestación de banda.
+## ðŸ“ DescripciÃ³n del Problema
+Describe de manera directa y tÃ©cnica quÃ© anomalÃ­a presenta el motor de orquestaciÃ³n de banda.
 
-## 🚀 Pasos para Reproducir
-1.  Ser Líder de Banda o Ayudante con **TerrorSquadAI (Sequito Edition)**.
+## ðŸš€ Pasos para Reproducir
+1.  Ser LÃ­der de Banda o Ayudante con **TerrorSquadAI (Sequito Edition)**.
 2.  Iniciar combate contra: [ej: Cthun].
 3.  Observar el fallo: [ej: Marcas de CC no se sincronizan o error de LUA].
 
-## 📊 Entorno Táctico
-- **Versión de TerrorSquadAI**: [v9.4.0 Squad-Tier]
+## ðŸ“Š Entorno TÃ¡ctico
+- **VersiÃ³n de TerrorSquadAI**: [v1.0.4 Squad-Tier]
 - **Cliente**: Turtle WoW v1.12.1
 - **AddOns en conflicto**: [ej: DBM, BigWigs]
 
-## 📁 Logs (TerrorSquadAI Logger)
+## ðŸ“ Logs (TerrorSquadAI Logger)
 Pega el error LUA completo.
 
 ```lua
--- PEGA EL ERROR AQUÍ
+-- PEGA EL ERROR AQUÃ
 ```
 
-## 📸 Evidencia Visual
+## ðŸ“¸ Evidencia Visual
 Adjunta capturas si el problema es de renderizado de marcas o solapamiento de ventanas.
 
 ---
-© 2026 **DarckRovert** — El Séquito del Terror.
+Â© 2026 **DarckRovert** â€” El SÃ©quito del Terror.
+

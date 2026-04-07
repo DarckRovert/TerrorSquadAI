@@ -1,9 +1,9 @@
-# TerrorSquadAI — Collective Intelligence (v9.4.0 [Squad-Tier]) ⚔️🤖
+# TerrorSquad — Elite AI Tactics (v1.0.4 [Tactical-Tier]) ⚔️🧠🤖
 
 > **The first coordinated RAID-AI engine for Turtle WoW.** Un sistema de orquestación táctica diseñado por **DarckRovert** para maximizar la eficiencia del clan mediante análisis de patrones de banda en tiempo real.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-v9.4.0--Squad--Tier-orange)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-v1.0.4--Tactical--Tier-red)](./CHANGELOG.md)
 [![World of Warcraft](https://img.shields.io/badge/WoW-1.12.1--Turtle-orange)](https://turtle-wow.org)
 [![Support](https://img.shields.io/badge/Support-Ko--fi-blue)](https://ko-fi.com/darckrovert)
 

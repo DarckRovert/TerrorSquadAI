@@ -1,6 +1,6 @@
 ## Interface: 11200
 ## Title: |cffff0000Terror|cffffffffSquad AI |r|cff00ccff[Séquito del Terror]|r
-## Version: 9.4.0 [Omni-Tier]
+## Version: 1.0.4 [Tactical-Tier]
 ## Notes: Módulo avanzado de IA para la gestión de escuadrones y toma de decisiones en combate. Exclusivo de El Séquito del Terror.
 ## Author: El Séquito del Terror (DarckRovert)
 ## SavedVariables: TerrorSquadAIDB

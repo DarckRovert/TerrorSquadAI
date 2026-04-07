@@ -4,7 +4,7 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 ---
 
-## [v9.4.0] — 2026-04-07 [Squad-Tier]
+## [v1.0.4] — 2026-04-07 [Tactical-Tier]
 
 ### 🤖 Intelligence & Raid Sync (Mejoras)
 - **Neural Sync Bridge**: Nueva integración asíncrona con el ecosistema de IA de mascotas del Séquito.
@@ -22,7 +22,7 @@ Todos los cambios notables en este proyecto serán documentados en este archivo 
 
 | Versión | Fecha | Nombre Clave | Estado | Resumen |
 | :--- | :--- | :--- | :---: | :--- |
-| **9.4.0** | 2026-04-07 | **Squad-Tier** | ✅ | Orquestación Colectiva v9.4.0. |
+| **1.0.4** | 2026-04-07 | **Tactical-Tier** | ✅ | Orquestación táctica v1.0.4. |
 | **9.3.0** | 2026-03-25 | **Tactical-Rise** | ⚠️ | Mejoras en el Scan de Banda y Alertas. |
 | **9.2.0** | 2026-01-20 | **Stability** | ❌ | Versión inicial de la IA de escuadrón. |
 
