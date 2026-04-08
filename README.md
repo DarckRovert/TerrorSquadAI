@@ -35,12 +35,13 @@ No es un gestor de marcas. Es un **Motor de Inteligencia Colectiva** que analiza
 
 ## 🏗️ Suite de Documentación (Wiki)
 
-Domina la inteligencia de banda en nuestra base de conocimientos:
+Domina la inteligencia de banda en nuestra base de conocimientos oficial:
 
-- 📐 **[Arquitectura Colectiva](./wiki/Architecture.md)**: Cómo pensamos como uno solo.
-- 🛠️ **[Guía de API Squad](./wiki/API_Guide.md)**: Integración con TerrorMeter.
-- ❓ **[FAQ Táctico](./wiki/FAQ.md)**: ¿Por qué la IA marcó ese objetivo?
-- 📖 **[Manual del Comandante](./wiki/User_Manual.md)**: Guía de orquestación de banda.
+- 🏰 **[Arquitectura Colectiva](https://github.com/DarckRovert/TerrorSquadAI/wiki/Arquitectura-(Extended))**: Cómo pensamos como uno solo.
+- 🛠️ **[Guía de API Squad](https://github.com/DarckRovert/TerrorSquadAI/wiki/Guía-de-API)**: Integración con TerrorMeter.
+- ❓ **[FAQ Táctico](https://github.com/DarckRovert/TerrorSquadAI/wiki/FAQ)**: ¿Por qué la IA marcó ese objetivo?
+- 📖 **[Manual del Comandante](https://github.com/DarckRovert/TerrorSquadAI/wiki/Manual-de-Usuario)**: Guía de orquestación de banda.
+- 📈 **[Auditoría de Rendimiento](https://github.com/DarckRovert/TerrorSquadAI/wiki/Auditoría-de-Rendimiento)**: Inferencia de baja latencia.
 
 ## 🚀 Despliegue Rápido (Elite-Flow)
 
